@@ -1,0 +1,125 @@
+﻿<Window x:Class="SubtitleFileCleanerGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SubtitleFileCleanerGUI"
+        xmlns:service ="clr-namespace:SubtitleFileCleanerGUI.Service"
+        mc:Ignorable="d"
+        Title="SubtitleFileCleanerGUI" Height="350" Width="600">
+    <Window.Resources>
+        <service:ParameterConverter x:Key="ParameterConverter"/>
+
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Margin" Value="8"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.10*"/>
+            <RowDefinition Height="0.75*"/>
+            <RowDefinition Height="0.15*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Files queue" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"></TextBlock>
+
+        <DataGrid x:Name="MainDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding SubtitleFiles}">
+            <DataGrid.Columns>
+                
+                <DataGridTemplateColumn Width="0.27*" Header="Path Location">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid AllowDrop="True" Background="Transparent">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="PreviewDragOver">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                            Path=DataContext.PreviewDragOverCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                            Path=DataContext.DropFileCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <TextBox Grid.Row="0" Text="{Binding PathLocation, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button Grid.Row="1" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                    Path=DataContext.GetFileLocationCommand}" CommandParameter="{Binding SelectedItem, ElementName=MainDataGrid}">...</Button>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTemplateColumn Width="0.27*" Header="Path Destination">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid AllowDrop="True" Background="Transparent">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="PreviewDragOver">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                            Path=DataContext.PreviewDragOverCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="Drop">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                            Path=DataContext.DropFileCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <TextBox Grid.Row="0" Text="{Binding PathDestination, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button Grid.Row="1" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                    Path=DataContext.GetFileDestinationCommand}" CommandParameter="{Binding SelectedItem, ElementName=MainDataGrid}">...</Button>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="0.16*" Header="Convertor">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                    Path=DataContext.Cleaners}" SelectedItem="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                    Path=DataContext.SelectedCleaner, Mode=OneTime}">
+
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
+                                            Path=DataContext.CleanerChangedCommand}">
+                                            <i:InvokeCommandAction.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource ParameterConverter}">
+                                                    <Binding Path="SelectedItem" ElementName="MainDataGrid"/>
+                                                    <Binding Path="SelectedItem" RelativeSource="{RelativeSource AncestorType={x:Type ComboBox}}"/>
+                                                </MultiBinding>
+                                            </i:InvokeCommandAction.CommandParameter>
+                                        </i:InvokeCommandAction>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridCheckBoxColumn Width="0.15*" Header="Delete tags" Binding="{Binding DeleteTags}"/>
+                <DataGridCheckBoxColumn Width="0.15*" Header="To one line" Binding="{Binding ToOneLine}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Command="{Binding AddFileCommand}">Add</Button>
+            <Button Command="{Binding RemoveFileCommand}" CommandParameter="{Binding SelectedItem, ElementName=MainDataGrid}">Remove</Button>
+            <Button Command="{Binding ConvertFileCommand}" CommandParameter="{Binding SelectedItem, ElementName=MainDataGrid}">Convert</Button>
+            <Button Command="{Binding ConvertAllFilesCommand}">Convert All</Button>
+        </StackPanel>
+    </Grid>
+</Window>
