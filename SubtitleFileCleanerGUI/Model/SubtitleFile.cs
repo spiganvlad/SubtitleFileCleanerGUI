@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using SubtitleBytesClearFormatting.Cleaner;
 
 namespace SubtitleFileCleanerGUI.Model
 {
@@ -7,10 +8,25 @@ namespace SubtitleFileCleanerGUI.Model
     public enum SubtitleCleaners
     {
         Auto,
+        [SubtitleCleaner(typeof(SrtCleaner))]
+        [SubtitleTags("GetBasicTags")]
+        [SubtitleExtension(".srt")]
         Srt,
+        [SubtitleCleaner(typeof(AssCleaner))]
+        [SubtitleTags("GetAssSpecificTags")]
+        [SubtitleExtension(".ass")]
         Ass,
+        [SubtitleCleaner(typeof(VttCleaner))]
+        [SubtitleTags("GetBasicTags")]
+        [SubtitleExtension(".vtt")]
         Vtt,
+        [SubtitleCleaner(typeof(SbvCleaner))]
+        [SubtitleTags("GetBasicTags")]
+        [SubtitleExtension(".sbv")]
         Sbv,
+        [SubtitleCleaner(typeof(SubCleaner))]
+        [SubtitleTags("GetSubSpecificTags")]
+        [SubtitleExtension(".sub")]
         Sub
     }
 

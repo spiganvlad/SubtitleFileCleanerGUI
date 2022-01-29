@@ -18,5 +18,25 @@ namespace SubtitleFileCleanerGUI.Service
             using FileStream fs = new(filePath, FileMode.CreateNew, FileAccess.Write);
             await fs.WriteAsync(textBytes, 0, textBytes.Length);
         }
+
+        public static string CreateUniquePath(string pathLocation, string pathDestination)
+        {
+            string path = pathDestination + "\\" + Path.ChangeExtension(Path.GetFileName(pathLocation), ".txt");
+
+            if (File.Exists(path))
+            {
+                string fileDir = Path.GetDirectoryName(path);
+                string fileName = Path.GetFileNameWithoutExtension(path);
+                string fileExt = Path.GetExtension(path);
+
+                int i = 1;
+                do
+                {
+                    path = fileDir + "\\" + fileName + $" ({i++})" + fileExt;
+                } while (File.Exists(path));
+            }
+
+            return path;
+        }
     }
 }
