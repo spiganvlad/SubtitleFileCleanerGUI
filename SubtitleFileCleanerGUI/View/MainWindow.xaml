@@ -25,12 +25,37 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.10*"/>
-            <RowDefinition Height="0.75*"/>
             <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.85*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Files queue" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"></TextBlock>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.15*"/>
+                <ColumnDefinition Width="0.20*"/>
+                <ColumnDefinition Width="0.15*"/>
+                <ColumnDefinition Width="0.25*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Style="{StaticResource ActionButton}" HorizontalAlignment="Right">
+                <Image Source="/Images/Settings.png"/>
+            </Button>
+
+            <Button Grid.Column="1" Style="{StaticResource ActionButton}" Command="{Binding AddFileCommand}" HorizontalAlignment="Center">
+                <Image Source="/Images/Add.png"/>
+            </Button>
+
+            <TextBlock Grid.Column="2" Text="Files queue" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"/>
+
+            <Button Grid.Column="3" Style="{StaticResource ActionButton}" Command="{Binding ConvertAllFilesCommand}" HorizontalAlignment="Center">
+                <Image Source="/Images/ConvertAll.png"/>
+            </Button>
+
+            <Button Grid.Column="4" Style="{StaticResource ActionButton}" Command="{Binding RemoveAllFileCommand}" HorizontalAlignment="Left">
+                <Image Source="/Images/DeleteAll.png"/>
+            </Button>
+        </Grid>
 
         <DataGrid x:Name="MainDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding SubtitleFiles}"
                   AllowDrop="True">
@@ -44,9 +69,9 @@
             </i:Interaction.Triggers>
             <DataGrid.Columns>
                 <DataGridTextColumn Width="0.08*" Header="Status">
-                    
+
                 </DataGridTextColumn>
-                
+
                 <DataGridTemplateColumn Width="0.20*" Header="Path Location">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -63,7 +88,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
+
                 <DataGridTemplateColumn Width="0.20*" Header="Path Destination">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -132,10 +157,5 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Style="{StaticResource BottomButton}" Command="{Binding AddFileCommand}">Add</Button>
-            <Button Style="{StaticResource BottomButton}" Command="{Binding ConvertAllFilesCommand}">Convert All</Button>
-        </StackPanel>
     </Grid>
 </Window>

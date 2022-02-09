@@ -15,6 +15,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
     {
         private RelayCommand addFileCommand;
         private RelayCommand removeFileCommand;
+        private RelayCommand removeAllFileCommand;
         private RelayCommand convertFileCommand;
         private RelayCommand convertAllFilesCommand;
         private RelayCommand getFileLocationCommand;
@@ -29,6 +30,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
 
         public RelayCommand AddFileCommand => addFileCommand ??= new RelayCommand(item => AddFile());
         public RelayCommand RemoveFileCommand => removeFileCommand ??= new RelayCommand(item => RemoveFile(item));
+        public RelayCommand RemoveAllFileCommand => removeAllFileCommand ??= new RelayCommand(item => RemoveAllFile(item));
         public RelayCommand ConvertFileCommand => convertFileCommand ??= new RelayCommand(item => ConvertFile(item));
         public RelayCommand ConvertAllFilesCommand => convertAllFilesCommand ??= new RelayCommand(item => ConvertAllFiles());
         public RelayCommand GetFileLocationCommand => getFileLocationCommand ??= new RelayCommand(item => GetFileLocation(item));
@@ -53,6 +55,11 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             if (item != null)
                 SubtitleFiles.Remove((SubtitleFile)item);
+        }
+
+        private void RemoveAllFile(object item)
+        {
+            SubtitleFiles.Clear();
         }
 
         private async void ConvertFile(object item)
