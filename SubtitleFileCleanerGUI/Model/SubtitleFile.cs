@@ -91,6 +91,13 @@ namespace SubtitleFileCleanerGUI.Model
         }
 
         public SubtitleFile() { }
+        public SubtitleFile(CustomSettings settings)
+        {
+            PathDestination = settings.PathDestination;
+            TargetCleaner = settings.Cleaner;
+            DeleteTags = settings.DeleteTags;
+            ToOneLine = settings.ToOneLine;
+        }
 
         public void OnPropertyChanged([CallerMemberName] string property = "")
         {

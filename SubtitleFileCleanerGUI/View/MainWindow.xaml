@@ -38,7 +38,7 @@
                 <ColumnDefinition Width="0.25*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Style="{StaticResource ActionButton}" HorizontalAlignment="Right">
+            <Button Grid.Column="0" Style="{StaticResource ActionButton}" Command="{Binding OpenSettingsCommand}" HorizontalAlignment="Right">
                 <Image Source="/Images/Settings.png"/>
             </Button>
 
@@ -106,7 +106,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="0.10*" Header="Convertor">
+                <DataGridTemplateColumn Width="0.10*" Header="Converter">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},

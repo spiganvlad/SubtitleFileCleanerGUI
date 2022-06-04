@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Ookii.Dialogs.Wpf;
+using SubtitleFileCleanerGUI.View;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service;
 
@@ -22,11 +23,14 @@ namespace SubtitleFileCleanerGUI.ViewModel
         private RelayCommand getFileDestinationCommand;
         private RelayCommand previewDragOverCommand;
         private RelayCommand dropFileCommand;
+        private RelayCommand openSettingsCommand;
         private RelayCommand cleanerChangedCommand;
 
         public ObservableCollection<SubtitleFile> SubtitleFiles { get; }
         public IEnumerable<SubtitleCleaners> Cleaners { get; }
         public SubtitleCleaners SelectedCleaner { get; }
+        private CustomSettings Settings { get; }
+        private Window SettingsWindow { get; set; }
 
         public RelayCommand AddFileCommand => addFileCommand ??= new RelayCommand(item => AddFile());
         public RelayCommand RemoveFileCommand => removeFileCommand ??= new RelayCommand(item => RemoveFile(item));
@@ -37,6 +41,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public RelayCommand GetFileDestinationCommand => getFileDestinationCommand ??= new RelayCommand(item => GetFileDestination(item));
         public RelayCommand PreviewDragOverCommand => previewDragOverCommand ??= new RelayCommand(item => PreviewDragOver(item));
         public RelayCommand DropFileCommand => dropFileCommand ??= new RelayCommand(item => DropFile(item));
+        public RelayCommand OpenSettingsCommand => openSettingsCommand ??= new RelayCommand(item => OpenSettings(item));
         public RelayCommand CleanerChangedCommand => cleanerChangedCommand ??= new RelayCommand(item => CleanerChanged(item));
 
         public MainVM()
@@ -44,11 +49,13 @@ namespace SubtitleFileCleanerGUI.ViewModel
             SubtitleFiles = new ObservableCollection<SubtitleFile>();
             Cleaners = Enum.GetValues(typeof(SubtitleCleaners)).Cast<SubtitleCleaners>();
             SelectedCleaner = SubtitleCleaners.Auto;
+            Settings = SettingsManipulator.LoadSettings(SettingsTypes.Custom, true);
+            SettingsWindow = new SettingsWindow();
         }
 
         private void AddFile()
         {
-            SubtitleFiles.Add(new SubtitleFile());
+            SubtitleFiles.Add(new SubtitleFile(Settings));
         }
 
         private void RemoveFile(object item)
@@ -188,8 +195,19 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             foreach (string filePath in filePaths)
             {
-                SubtitleFile file = new() { PathLocation = filePath };
+                SubtitleFile file = new(Settings) { PathLocation = filePath };
                 SubtitleFiles.Add(file);
+            }
+        }
+
+        public void OpenSettings(object item)
+        {
+            if (SettingsWindow.IsLoaded)
+                SettingsWindow.Focus();
+            else
+            {
+                SettingsWindow = new SettingsWindow();
+                SettingsWindow.Show();
             }
         }
 
