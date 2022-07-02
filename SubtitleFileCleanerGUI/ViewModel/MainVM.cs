@@ -215,7 +215,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             if (item is object[] itemArr && itemArr.Length >= 2 &&
                 itemArr[0] is SubtitleFile file && itemArr[1] is SubtitleCleaners cleaner)
-                file.TargetCleaner = cleaner;
+                file.Cleaner = cleaner;
         }
     }
 }

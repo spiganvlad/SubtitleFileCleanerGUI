@@ -11,17 +11,17 @@ namespace SubtitleFileCleanerGUI.Service
     {
         public SubtitleFileConverter() { }
 
-        public async Task ConvertFileAsync(SubtitleFile file)
+        public async Task ConvertFileAsync(ISubtitleFile file)
         {
-            if (file.TargetCleaner == SubtitleCleaners.Auto)
+            if (file.Cleaner == SubtitleCleaners.Auto)
                 await Task.Run(() => DefineAutoCleaner(file));
 
-            ISubtitleCleanerAsync cleaner = await GetSubtitleCleaner(file.PathLocation, file.TargetCleaner);
+            ISubtitleCleanerAsync cleaner = await GetSubtitleCleaner(file.PathLocation, file.Cleaner);
 
             byte[] resultBytes = await cleaner.DeleteFormattingAsync();
 
             if (file.DeleteTags)
-                resultBytes = await DeleteFileTagsAsync(resultBytes, file.TargetCleaner);
+                resultBytes = await DeleteFileTagsAsync(resultBytes, file.Cleaner);
 
             if (file.ToOneLine)
                 resultBytes = await FileToOneLineAsync(resultBytes);
@@ -30,7 +30,7 @@ namespace SubtitleFileCleanerGUI.Service
             await FileManipulator.WriteFileAsync(destination, resultBytes);
         }
 
-        private void DefineAutoCleaner(SubtitleFile file)
+        private void DefineAutoCleaner(ISubtitleFile file)
         {
             string fileExtension = Path.GetExtension(file.PathLocation).ToLower();
             var cleaners = Enum.GetValues(typeof(SubtitleCleaners)).Cast<SubtitleCleaners>();
@@ -46,7 +46,7 @@ namespace SubtitleFileCleanerGUI.Service
                 {
                     if (attribute.Extension == fileExtension)
                     {
-                        file.TargetCleaner = cleaner;
+                        file.Cleaner = cleaner;
                         return;
                     }
                 }

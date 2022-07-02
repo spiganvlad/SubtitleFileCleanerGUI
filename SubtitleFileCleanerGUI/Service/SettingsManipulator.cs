@@ -1,23 +1,15 @@
 ﻿using System.IO;
 using System.Linq;
-using SubtitleFileCleanerGUI.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SubtitleFileCleanerGUI.Model;
 
 namespace SubtitleFileCleanerGUI.Service
 {
-    public enum SettingsTypes
-    {
-        [SinglePath("./Settings/customSettings.json")]
-        Custom,
-        [SinglePath("./Settings/defaultSettings.json")]
-        Default 
-    }
-
     public static class SettingsManipulator
     {
         // Used to auto-update settings
-        private delegate void SettingsChangedEventHandler(CustomSettings settings);
+        private delegate void SettingsChangedEventHandler(ICustomSettings settings, SettingsTypes type);
         private static event SettingsChangedEventHandler SettingsChanged;
 
         public static CustomSettings LoadSettings(SettingsTypes settingsTypes, bool updateAutomatically = false)
@@ -37,22 +29,17 @@ namespace SubtitleFileCleanerGUI.Service
             return settings;
         }
 
-        public static void SaveSettings(CustomSettings settings, SettingsTypes settingsTypes)
+        public static void SaveSettings(ICustomSettings settings, SettingsTypes settingsType)
         {
             JObject json = JObject.FromObject(settings);
 
-            var attributes = EnumAttributeManipulator<SettingsTypes>.GetEnumAttributes<SinglePathAttribute>(settingsTypes);
+            var attributes = EnumAttributeManipulator<SettingsTypes>.GetEnumAttributes<SinglePathAttribute>(settingsType);
             using FileStream stream = new(attributes.First().Path, FileMode.OpenOrCreate, FileAccess.Write);
             using StreamWriter file = new(stream);
             using JsonTextWriter writer = new(file);
 
             json.WriteTo(writer);
-            UpdateSettings(settings);
-        }
-
-        private static void UpdateSettings(CustomSettings settings)
-        {
-            SettingsChanged?.Invoke(settings);
+            SettingsChanged?.Invoke(settings, settingsType);
         }
     }
 }

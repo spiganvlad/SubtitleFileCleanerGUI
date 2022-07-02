@@ -3,7 +3,15 @@ using System.Runtime.CompilerServices;
 
 namespace SubtitleFileCleanerGUI.Model
 {
-    public class CustomSettings : INotifyPropertyChanged
+    public enum SettingsTypes
+    {
+        [SinglePath("./Settings/customSettings.json")]
+        Custom,
+        [SinglePath("./Settings/defaultSettings.json")]
+        Default
+    }
+
+    public class CustomSettings : ICustomSettings, IUpdatebleSettings, INotifyPropertyChanged
     {
         private string pathDestination;
         private SubtitleCleaners cleaner;
@@ -46,17 +54,21 @@ namespace SubtitleFileCleanerGUI.Model
                 OnPropertyChanged("ToOneLine");
             }
         }
+        public SettingsTypes SettingsType { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public CustomSettings() { }
 
-        public void UpdateSettings(CustomSettings newSettings)
+        public void UpdateSettings(ICustomSettings newSettings, SettingsTypes targetType)
         {
-            PathDestination = newSettings.PathDestination;
-            Cleaner = newSettings.Cleaner;
-            DeleteTags = newSettings.DeleteTags;
-            ToOneLine = newSettings.ToOneLine;
+            if (SettingsType == targetType)
+            {
+                PathDestination = newSettings.PathDestination;
+                Cleaner = newSettings.Cleaner;
+                DeleteTags = newSettings.DeleteTags;
+                ToOneLine = newSettings.ToOneLine;
+            }
         }
 
         public void OnPropertyChanged([CallerMemberName] string property = "")

@@ -30,11 +30,11 @@ namespace SubtitleFileCleanerGUI.Model
         Sub
     }
 
-    public class SubtitleFile : INotifyPropertyChanged
+    public class SubtitleFile : ISubtitleFile, INotifyPropertyChanged
     {
         private string pathLocation;
         private string pathDestination;
-        private SubtitleCleaners targetCleaner;
+        private SubtitleCleaners cleaner;
         private bool deleteTags;
         private bool toOneLine;
 
@@ -60,12 +60,12 @@ namespace SubtitleFileCleanerGUI.Model
             }
         }
 
-        public SubtitleCleaners TargetCleaner
+        public SubtitleCleaners Cleaner
         {
-            get => targetCleaner;
+            get => cleaner;
             set
             {
-                targetCleaner = value;
+                cleaner = value;
                 OnPropertyChanged("TargetCleaner");
             }
         }
@@ -91,10 +91,10 @@ namespace SubtitleFileCleanerGUI.Model
         }
 
         public SubtitleFile() { }
-        public SubtitleFile(CustomSettings settings)
+        public SubtitleFile(ICustomSettings settings)
         {
             PathDestination = settings.PathDestination;
-            TargetCleaner = settings.Cleaner;
+            Cleaner = settings.Cleaner;
             DeleteTags = settings.DeleteTags;
             ToOneLine = settings.ToOneLine;
         }
