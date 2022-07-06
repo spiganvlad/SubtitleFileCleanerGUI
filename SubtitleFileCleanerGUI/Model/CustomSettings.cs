@@ -20,7 +20,7 @@ namespace SubtitleFileCleanerGUI.Model
 
         public string PathDestination
         {
-            get { return pathDestination; }
+            get => pathDestination;
             set
             {
                 pathDestination = value;
@@ -29,7 +29,7 @@ namespace SubtitleFileCleanerGUI.Model
         }
         public SubtitleCleaners Cleaner
         {
-            get { return cleaner; }
+            get => cleaner;
             set
             {
                 cleaner = value;
@@ -38,7 +38,7 @@ namespace SubtitleFileCleanerGUI.Model
         }
         public bool DeleteTags
         {
-            get { return deleteTags; }
+            get => deleteTags;
             set
             {
                 deleteTags = value;
@@ -47,7 +47,7 @@ namespace SubtitleFileCleanerGUI.Model
         }
         public bool ToOneLine
         {
-            get { return toOneLine; }
+            get => toOneLine;
             set
             {
                 toOneLine = value;

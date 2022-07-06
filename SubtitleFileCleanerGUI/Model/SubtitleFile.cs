@@ -66,7 +66,7 @@ namespace SubtitleFileCleanerGUI.Model
             set
             {
                 cleaner = value;
-                OnPropertyChanged("TargetCleaner");
+                OnPropertyChanged("Cleaner");
             }
         }
 

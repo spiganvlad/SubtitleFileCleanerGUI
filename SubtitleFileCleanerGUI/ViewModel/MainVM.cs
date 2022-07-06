@@ -24,11 +24,9 @@ namespace SubtitleFileCleanerGUI.ViewModel
         private RelayCommand previewDragOverCommand;
         private RelayCommand dropFileCommand;
         private RelayCommand openSettingsCommand;
-        private RelayCommand cleanerChangedCommand;
 
         public ObservableCollection<SubtitleFile> SubtitleFiles { get; }
         public IEnumerable<SubtitleCleaners> Cleaners { get; }
-        public SubtitleCleaners SelectedCleaner { get; }
         private CustomSettings Settings { get; }
         private Window SettingsWindow { get; set; }
 
@@ -42,13 +40,11 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public RelayCommand PreviewDragOverCommand => previewDragOverCommand ??= new RelayCommand(item => PreviewDragOver(item));
         public RelayCommand DropFileCommand => dropFileCommand ??= new RelayCommand(item => DropFile(item));
         public RelayCommand OpenSettingsCommand => openSettingsCommand ??= new RelayCommand(item => OpenSettings(item));
-        public RelayCommand CleanerChangedCommand => cleanerChangedCommand ??= new RelayCommand(item => CleanerChanged(item));
 
         public MainVM()
         {
             SubtitleFiles = new ObservableCollection<SubtitleFile>();
-            Cleaners = Enum.GetValues(typeof(SubtitleCleaners)).Cast<SubtitleCleaners>();
-            SelectedCleaner = SubtitleCleaners.Auto;
+            Cleaners = Enum.GetValues<SubtitleCleaners>().Cast<SubtitleCleaners>();
             Settings = SettingsManipulator.LoadSettings(SettingsTypes.Custom, true);
             SettingsWindow = new SettingsWindow();
         }
@@ -209,13 +205,6 @@ namespace SubtitleFileCleanerGUI.ViewModel
                 SettingsWindow = new SettingsWindow();
                 SettingsWindow.Show();
             }
-        }
-
-        private void CleanerChanged(object item)
-        {
-            if (item is object[] itemArr && itemArr.Length >= 2 &&
-                itemArr[0] is SubtitleFile file && itemArr[1] is SubtitleCleaners cleaner)
-                file.Cleaner = cleaner;
         }
     }
 }

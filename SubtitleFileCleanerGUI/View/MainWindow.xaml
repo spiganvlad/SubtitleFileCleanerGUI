@@ -22,7 +22,7 @@
             <Setter Property="Margin" Value="5"/>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.15*"/>
@@ -110,29 +110,27 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
-                                    Path=DataContext.Cleaners}" SelectedItem="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
-                                    Path=DataContext.SelectedCleaner, Mode=OneTime}">
-
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
-                                            Path=DataContext.CleanerChangedCommand}">
-                                            <i:InvokeCommandAction.CommandParameter>
-                                                <MultiBinding Converter="{StaticResource ParameterConverter}">
-                                                    <Binding Path="SelectedItem" ElementName="MainDataGrid"/>
-                                                    <Binding Path="SelectedItem" RelativeSource="{RelativeSource AncestorType={x:Type ComboBox}}"/>
-                                                </MultiBinding>
-                                            </i:InvokeCommandAction.CommandParameter>
-                                        </i:InvokeCommandAction>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
+                                    Path=DataContext.Cleaners}" SelectedItem="{Binding Cleaner, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridCheckBoxColumn Width="0.12*" Header="Delete tags" Binding="{Binding DeleteTags, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridCheckBoxColumn Width="0.12*" Header="To one line" Binding="{Binding ToOneLine, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTemplateColumn Width="0.12*" Header="Delete tags">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding DeleteTags, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="0.12*" Header="To one line">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding ToOneLine, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Width="0.18*" Header="Actions">
                     <DataGridTemplateColumn.CellTemplate>
