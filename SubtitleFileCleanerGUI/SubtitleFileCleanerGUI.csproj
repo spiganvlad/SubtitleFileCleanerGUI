@@ -9,11 +9,15 @@
 
   <ItemGroup>
     <None Remove="Images\Add.png" />
+    <None Remove="Images\CompletedProcess.png" />
     <None Remove="Images\Convert.png" />
     <None Remove="Images\ConvertAll.png" />
+    <None Remove="Images\ConvertingProcess.png" />
     <None Remove="Images\Delete.png" />
     <None Remove="Images\DeleteAll.png" />
+    <None Remove="Images\FailedProcess.png" />
     <None Remove="Images\Settings.png" />
+    <None Remove="Images\WaitingProcess.png" />
     <None Remove="SubtitleBytesClearFormatting.dll" />
   </ItemGroup>
 
@@ -26,11 +30,15 @@
 
   <ItemGroup>
     <Resource Include="Images\Add.png" />
+    <Resource Include="Images\CompletedProcess.png" />
     <Resource Include="Images\ConvertAll.png" />
+    <Resource Include="Images\ConvertingProcess.png" />
     <Resource Include="Images\Delete.png" />
     <Resource Include="Images\Convert.png" />
     <Resource Include="Images\DeleteAll.png" />
+    <Resource Include="Images\FailedProcess.png" />
     <Resource Include="Images\Settings.png" />
+    <Resource Include="Images\WaitingProcess.png" />
   </ItemGroup>
 
   <ItemGroup>

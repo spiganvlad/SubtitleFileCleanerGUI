@@ -37,6 +37,7 @@ namespace SubtitleFileCleanerGUI.Model
         private SubtitleCleaners cleaner;
         private bool deleteTags;
         private bool toOneLine;
+        private StatusInfo statusInfo;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -90,8 +91,18 @@ namespace SubtitleFileCleanerGUI.Model
             }
         }
 
-        public SubtitleFile() { }
-        public SubtitleFile(ICustomSettings settings)
+        public StatusInfo StatusInfo
+        {
+            get => statusInfo;
+            set
+            {
+                statusInfo = value;
+                OnPropertyChanged("StatusInfo");
+            }
+        }
+
+        public SubtitleFile() => StatusInfo = new StatusInfo();
+        public SubtitleFile(ICustomSettings settings) : this()
         {
             PathDestination = settings.PathDestination;
             Cleaner = settings.Cleaner;

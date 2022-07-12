@@ -65,36 +65,31 @@ namespace SubtitleFileCleanerGUI.ViewModel
             SubtitleFiles.Clear();
         }
 
-        private async void ConvertFile(object item)
+        private void ConvertFile(object item)
         {
-            try
-            {
-                if (item is SubtitleFile file)
-                    await new SubtitleFileConverter().ConvertFileAsync(file);
-            }
-            catch (NullReferenceException)
-            {
-                MessageBox.Show("Can't convert file. Check the completeness of the input fields.", "Unexpected error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (System.IO.FileNotFoundException e)
-            {
-                MessageBox.Show(e.Message, "Unexpected error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (System.IO.DirectoryNotFoundException e)
-            {
-                MessageBox.Show(e.Message, "Unexpected error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "Unexpected error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            if (item is SubtitleFile file)
+                Task.Run(async () => await ConvertFileAsync(file));
         }
 
         private void ConvertAllFiles()
         {
-            if (SubtitleFiles.Count > 0)
-                foreach (SubtitleFile file in SubtitleFiles)
-                    Task.Run(async() => await new SubtitleFileConverter().ConvertFileAsync(file));
+            foreach (SubtitleFile file in SubtitleFiles)
+                Task.Run(async () => await ConvertFileAsync(file));
+        }
+
+        private async Task ConvertFileAsync(SubtitleFile file)
+        {
+            try
+            {
+                file.StatusInfo.StatusType = StatusTypes.ConvertingProcess;
+                await new SubtitleFileConverter().ConvertFileAsync(file);
+                file.StatusInfo.StatusType = StatusTypes.CompletedProcess;
+            }
+            catch (Exception e)
+            {
+                file.StatusInfo.StatusType = StatusTypes.FailedProcess;
+                file.StatusInfo.TextInfo += "\n" + e.Message;
+            }
         }
 
         private void GetFileLocation(object item)
