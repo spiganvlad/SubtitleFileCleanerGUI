@@ -57,7 +57,7 @@
             </Button>
         </Grid>
 
-        <DataGrid x:Name="MainDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding SubtitleFiles}"
+        <DataGrid x:Name="MainDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding Files}"
                   AllowDrop="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewDragOver">
@@ -71,7 +71,7 @@
                 <DataGridTemplateColumn Width="0.08*" Header="Status">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image ToolTip="{Binding StatusInfo.TextInfo, UpdateSourceTrigger=PropertyChanged}" Source="{Binding StatusInfo.ImagePath, UpdateSourceTrigger=PropertyChanged}" />
+                            <Image ToolTip="{Binding TextInfo, UpdateSourceTrigger=PropertyChanged}" Source="{Binding ImagePath, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

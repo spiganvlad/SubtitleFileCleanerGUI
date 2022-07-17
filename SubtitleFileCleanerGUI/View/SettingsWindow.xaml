@@ -48,7 +48,7 @@
         </DockPanel>
 
         <DockPanel Grid.Row="1" Grid.Column="1">
-            <TextBox Text="{Binding Settings.PathDestination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            <TextBox Text="{Binding DefaultFile.PathDestination, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
         </DockPanel>
 
         <DockPanel Grid.Row="2">
@@ -56,17 +56,17 @@
         </DockPanel>
 
         <DockPanel Grid.Row="2" Grid.Column="1">
-            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Cleaners}" SelectedItem="{Binding Settings.Cleaner, Mode=TwoWay}"></ComboBox>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Cleaners}" SelectedItem="{Binding DefaultFile.Cleaner, Mode=TwoWay}"></ComboBox>
         </DockPanel>
 
         <DockPanel Grid.Row="3">
             <TextBlock>Default delete tags</TextBlock>
-            <CheckBox IsChecked="{Binding Path=Settings.DeleteTags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+            <CheckBox IsChecked="{Binding Path=DefaultFile.DeleteTags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
         </DockPanel>
 
         <DockPanel Grid.Row="3" Grid.Column="1">
             <TextBlock>Default to one line</TextBlock>
-            <CheckBox IsChecked="{Binding Path=Settings.ToOneLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+            <CheckBox IsChecked="{Binding Path=DefaultFile.ToOneLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
         </DockPanel>
 
         <DockPanel Grid.Row="4">
@@ -74,7 +74,7 @@
         </DockPanel>
 
         <DockPanel Grid.Row="4" Grid.Column="1">
-            <Button Command="{Binding RestoreSettingCommand}">Restore default</Button>
+            <Button Command="{Binding RestoreSettingsCommand}">Restore default</Button>
         </DockPanel>
     </Grid>
 </Window>

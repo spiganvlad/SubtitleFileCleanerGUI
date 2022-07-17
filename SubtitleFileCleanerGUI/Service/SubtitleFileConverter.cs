@@ -7,11 +7,9 @@ using SubtitleBytesClearFormatting.Cleaner;
 
 namespace SubtitleFileCleanerGUI.Service
 {
-    public class SubtitleFileConverter
-    {
-        public SubtitleFileConverter() { }
-
-        public async Task ConvertFileAsync(ISubtitleFile file)
+    public static class SubtitleFileConverter
+    { 
+        public static async Task ConvertFileAsync(SubtitleFile file)
         {
             if (file.Cleaner == SubtitleCleaners.Auto)
                 await Task.Run(() => DefineAutoCleaner(file));
@@ -30,14 +28,14 @@ namespace SubtitleFileCleanerGUI.Service
             await FileManipulator.WriteFileAsync(destination, resultBytes);
         }
 
-        private void DefineAutoCleaner(ISubtitleFile file)
+        private static void DefineAutoCleaner(SubtitleFile file)
         {
             string fileExtension = Path.GetExtension(file.PathLocation).ToLower();
-            var cleaners = Enum.GetValues(typeof(SubtitleCleaners)).Cast<SubtitleCleaners>();
+            var cleaners = EnumManipulator<SubtitleCleaners>.GetAllEnumValues();
 
             foreach (SubtitleCleaners cleaner in cleaners)
             {
-                var attributes = EnumAttributeManipulator<SubtitleCleaners>.GetEnumAttributes<SubtitleExtensionAttribute>(cleaner);
+                var attributes = EnumManipulator<SubtitleCleaners>.GetEnumAttributes<SubtitleExtensionAttribute>(cleaner);
 
                 if (!attributes.Any())
                     continue;
@@ -55,21 +53,18 @@ namespace SubtitleFileCleanerGUI.Service
             throw new InvalidOperationException($"Unable to define converter for {fileExtension} extension in {file.PathLocation} path");
         }
 
-        private async Task<ISubtitleCleanerAsync> GetSubtitleCleaner(string fileLocation, SubtitleCleaners subtitleCleaners)
+        private static async Task<ISubtitleCleanerAsync> GetSubtitleCleaner(string fileLocation, SubtitleCleaners subtitleCleaners)
         {
-            var attributes = EnumAttributeManipulator<SubtitleCleaners>.GetEnumAttributes<SubtitleCleanerAttribute>(subtitleCleaners);
+            var attributes = EnumManipulator<SubtitleCleaners>.GetEnumAttributes<SubtitleCleanerAttribute>(subtitleCleaners);
             return attributes.First().GetAsyncCleaner(await FileManipulator.ReadFileAsync(fileLocation));
         }
 
-        private async Task<byte[]> DeleteFileTagsAsync(byte[] textBytes, SubtitleCleaners subtitleCleaners)
+        private static async Task<byte[]> DeleteFileTagsAsync(byte[] textBytes, SubtitleCleaners subtitleCleaners)
         {
-            var attributes = EnumAttributeManipulator<SubtitleCleaners>.GetEnumAttributes<SubtitleTagsAttribute>(subtitleCleaners);
+            var attributes = EnumManipulator<SubtitleCleaners>.GetEnumAttributes<SubtitleTagsAttribute>(subtitleCleaners);
             return await TxtCleaner.DeleteTagsAsync(textBytes, attributes.First().GetSubtitleTagsDictionary());
         }
 
-        private async Task<byte[]> FileToOneLineAsync(byte[] textBytes)
-        {
-            return await TxtCleaner.ToOneLineAsync(textBytes);
-        }
+        private static async Task<byte[]> FileToOneLineAsync(byte[] textBytes) => await TxtCleaner.ToOneLineAsync(textBytes);
     }
 }

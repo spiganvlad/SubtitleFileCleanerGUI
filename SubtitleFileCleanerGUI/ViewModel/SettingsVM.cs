@@ -1,54 +1,43 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
-using System.ComponentModel;
+﻿using System.Windows;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service;
 
 namespace SubtitleFileCleanerGUI.ViewModel
 {
-    public class SettingsVM : INotifyPropertyChanged
+    public class SettingsVM : NotifyPropertyChangedObject
     {
-        private CustomSettings settings;
+        private SubtitleFile defaultFile;
         private RelayCommand saveSettingsCommand;
-        private RelayCommand restoreSettingCommand;
+        private RelayCommand restoreSettingsCommand;
 
-        public CustomSettings Settings 
+        public IEnumerable<SubtitleCleaners> Cleaners { get; private set; }
+        public SubtitleFile DefaultFile
         { 
-            get { return settings; }
-            private set {
-                settings = value;
-                OnPropertyChanged("Settings");
+            get => defaultFile;
+            private set
+            {
+                defaultFile = value;
+                OnPropertyChanged("DefaultFile");
             }
         }
-        public IEnumerable<SubtitleCleaners> Cleaners { get; private set; }
 
         public RelayCommand SaveSettingsCommand => saveSettingsCommand ??= new RelayCommand(_ => SaveSettings());
-        public RelayCommand RestoreSettingCommand => restoreSettingCommand ??= new RelayCommand(_ => RestoreSettings());
-        public event PropertyChangedEventHandler PropertyChanged;
+        public RelayCommand RestoreSettingsCommand => restoreSettingsCommand ??= new RelayCommand(_ => RestoreSettings());
 
-        public SettingsVM()
+        public SettingsVM(SubtitleFile defaultFile)
         {
-            Settings = SettingsManipulator.LoadSettings(SettingsTypes.Custom);
-            Cleaners = Enum.GetValues(typeof(SubtitleCleaners)).Cast<SubtitleCleaners>();
+            DefaultFile = defaultFile;
+            Cleaners = EnumManipulator<SubtitleCleaners>.GetAllEnumValues();
         }
 
         private void SaveSettings()
         {
-            SettingsManipulator.SaveSettings(Settings, SettingsTypes.Custom);
+            DefaultFilesManipulator.SaveSettings(DefaultFile, SettingsTypes.Custom);
             MessageBox.Show("Settings saved successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void RestoreSettings()
-        {
-            Settings = SettingsManipulator.LoadSettings(SettingsTypes.Default);
-        }
-
-        public void OnPropertyChanged([CallerMemberName] string property = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        private void RestoreSettings() =>
+            DefaultFile = DefaultFilesManipulator.LoadSettings(SettingsTypes.Default);
     }
 }

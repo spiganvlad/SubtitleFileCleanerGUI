@@ -9,14 +9,14 @@ namespace SubtitleFileCleanerGUI.Service
         {
             using FileStream fs = new(filePath, FileMode.Open, FileAccess.Read);
             byte[] resultBytes = new byte[fs.Length];
-            await fs.ReadAsync(resultBytes, 0, resultBytes.Length);
+            await fs.ReadAsync(resultBytes);
             return resultBytes;
         }
 
         public static async Task WriteFileAsync(string filePath, byte[] textBytes)
         {
             using FileStream fs = new(filePath, FileMode.CreateNew, FileAccess.Write);
-            await fs.WriteAsync(textBytes, 0, textBytes.Length);
+            await fs.WriteAsync(textBytes);
         }
 
         public static string CreateUniquePath(string pathLocation, string pathDestination)

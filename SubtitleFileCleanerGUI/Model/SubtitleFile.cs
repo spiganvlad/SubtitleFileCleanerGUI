@@ -1,45 +1,13 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using SubtitleBytesClearFormatting.Cleaner;
-
-namespace SubtitleFileCleanerGUI.Model
+﻿namespace SubtitleFileCleanerGUI.Model
 {
-    // Supported subtitle cleaners enum
-    public enum SubtitleCleaners
-    {
-        Auto,
-        [SubtitleCleaner(typeof(SrtCleaner))]
-        [SubtitleTags("GetBasicTags")]
-        [SubtitleExtension(".srt")]
-        Srt,
-        [SubtitleCleaner(typeof(AssCleaner))]
-        [SubtitleTags("GetAssSpecificTags")]
-        [SubtitleExtension(".ass")]
-        Ass,
-        [SubtitleCleaner(typeof(VttCleaner))]
-        [SubtitleTags("GetBasicTags")]
-        [SubtitleExtension(".vtt")]
-        Vtt,
-        [SubtitleCleaner(typeof(SbvCleaner))]
-        [SubtitleTags("GetBasicTags")]
-        [SubtitleExtension(".sbv")]
-        Sbv,
-        [SubtitleCleaner(typeof(SubCleaner))]
-        [SubtitleTags("GetSubSpecificTags")]
-        [SubtitleExtension(".sub")]
-        Sub
-    }
-
-    public class SubtitleFile : ISubtitleFile, INotifyPropertyChanged
+    public class SubtitleFile : NotifyPropertyChangedObject, ICloneableInstance<SubtitleFile>, ILocatable, IDislocatable, ICleanable,
+        IDeformatable, IMinifiable
     {
         private string pathLocation;
         private string pathDestination;
         private SubtitleCleaners cleaner;
         private bool deleteTags;
         private bool toOneLine;
-        private StatusInfo statusInfo;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public string PathLocation
         {
@@ -50,7 +18,6 @@ namespace SubtitleFileCleanerGUI.Model
                 OnPropertyChanged("PathLocation");
             }
         }
-
         public string PathDestination
         {
             get => pathDestination;
@@ -60,7 +27,6 @@ namespace SubtitleFileCleanerGUI.Model
                 OnPropertyChanged("PathDestination");
             }
         }
-
         public SubtitleCleaners Cleaner
         {
             get => cleaner;
@@ -70,7 +36,6 @@ namespace SubtitleFileCleanerGUI.Model
                 OnPropertyChanged("Cleaner");
             }
         }
-
         public bool DeleteTags
         {
             get => deleteTags;
@@ -80,7 +45,6 @@ namespace SubtitleFileCleanerGUI.Model
                 OnPropertyChanged("DeleteTags");
             }
         }
-
         public bool ToOneLine
         {
             get => toOneLine;
@@ -91,28 +55,21 @@ namespace SubtitleFileCleanerGUI.Model
             }
         }
 
-        public StatusInfo StatusInfo
-        {
-            get => statusInfo;
-            set
-            {
-                statusInfo = value;
-                OnPropertyChanged("StatusInfo");
-            }
-        }
+        public SubtitleFile() { }
 
-        public SubtitleFile() => StatusInfo = new StatusInfo();
-        public SubtitleFile(ICustomSettings settings) : this()
-        {
-            PathDestination = settings.PathDestination;
-            Cleaner = settings.Cleaner;
-            DeleteTags = settings.DeleteTags;
-            ToOneLine = settings.ToOneLine;
-        }
+        // The method allows you to create an object from a base (SubtitleFile) entity to a derivative (T)
+        public T CastTo<T>() where T : SubtitleFile, new() => CloneTo<T>();
 
-        public void OnPropertyChanged([CallerMemberName] string property = "")
+        public SubtitleFile Clone() => CloneTo<SubtitleFile>();
+
+        // The method allows you to clone an object to a derived base T
+        protected virtual T CloneTo<T>() where T : SubtitleFile, new() => new()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+            PathLocation = PathLocation,
+            PathDestination = PathDestination,
+            Cleaner = Cleaner,
+            DeleteTags = DeleteTags,
+            ToOneLine = ToOneLine
+        };
     }
 }

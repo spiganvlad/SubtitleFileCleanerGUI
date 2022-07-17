@@ -25,70 +25,64 @@ namespace SubtitleFileCleanerGUI.ViewModel
         private RelayCommand dropFileCommand;
         private RelayCommand openSettingsCommand;
 
-        public ObservableCollection<SubtitleFile> SubtitleFiles { get; }
+        public ObservableCollection<SubtitleStatusFile> Files { get; }
         public IEnumerable<SubtitleCleaners> Cleaners { get; }
-        private CustomSettings Settings { get; }
+        private SubtitleStatusFile DefaultFile { get; }
         private Window SettingsWindow { get; set; }
 
-        public RelayCommand AddFileCommand => addFileCommand ??= new RelayCommand(item => AddFile());
+        public RelayCommand AddFileCommand => addFileCommand ??= new RelayCommand(_ => AddFile());
         public RelayCommand RemoveFileCommand => removeFileCommand ??= new RelayCommand(item => RemoveFile(item));
-        public RelayCommand RemoveAllFileCommand => removeAllFileCommand ??= new RelayCommand(item => RemoveAllFile(item));
+        public RelayCommand RemoveAllFileCommand => removeAllFileCommand ??= new RelayCommand(_ => RemoveAllFile());
         public RelayCommand ConvertFileCommand => convertFileCommand ??= new RelayCommand(item => ConvertFile(item));
-        public RelayCommand ConvertAllFilesCommand => convertAllFilesCommand ??= new RelayCommand(item => ConvertAllFiles());
+        public RelayCommand ConvertAllFilesCommand => convertAllFilesCommand ??= new RelayCommand(_ => ConvertAllFiles());
         public RelayCommand GetFileLocationCommand => getFileLocationCommand ??= new RelayCommand(item => GetFileLocation(item));
         public RelayCommand GetFileDestinationCommand => getFileDestinationCommand ??= new RelayCommand(item => GetFileDestination(item));
         public RelayCommand PreviewDragOverCommand => previewDragOverCommand ??= new RelayCommand(item => PreviewDragOver(item));
         public RelayCommand DropFileCommand => dropFileCommand ??= new RelayCommand(item => DropFile(item));
-        public RelayCommand OpenSettingsCommand => openSettingsCommand ??= new RelayCommand(item => OpenSettings(item));
+        public RelayCommand OpenSettingsCommand => openSettingsCommand ??= new RelayCommand(_ => OpenSettings());
 
         public MainVM()
         {
-            SubtitleFiles = new ObservableCollection<SubtitleFile>();
-            Cleaners = Enum.GetValues<SubtitleCleaners>().Cast<SubtitleCleaners>();
-            Settings = SettingsManipulator.LoadSettings(SettingsTypes.Custom, true);
-            SettingsWindow = new SettingsWindow();
+            Files = new ObservableCollection<SubtitleStatusFile>();
+            Cleaners = EnumManipulator<SubtitleCleaners>.GetAllEnumValues();
+            DefaultFile = DefaultFilesManipulator.LoadSettings(SettingsTypes.Custom).CastTo<SubtitleStatusFile>();
+            SettingsWindow = new SettingsWindow(DefaultFile);
         }
 
-        private void AddFile()
-        {
-            SubtitleFiles.Add(new SubtitleFile(Settings));
-        }
+        private void AddFile() => Files.Add(DefaultFile.Clone());
 
         private void RemoveFile(object item)
         {
             if (item != null)
-                SubtitleFiles.Remove((SubtitleFile)item);
+                Files.Remove((SubtitleStatusFile)item);
         }
 
-        private void RemoveAllFile(object item)
-        {
-            SubtitleFiles.Clear();
-        }
+        private void RemoveAllFile() => Files.Clear();
 
         private void ConvertFile(object item)
         {
-            if (item is SubtitleFile file)
+            if (item is SubtitleStatusFile file)
                 Task.Run(async () => await ConvertFileAsync(file));
         }
 
         private void ConvertAllFiles()
         {
-            foreach (SubtitleFile file in SubtitleFiles)
+            foreach (SubtitleStatusFile file in Files)
                 Task.Run(async () => await ConvertFileAsync(file));
         }
 
-        private async Task ConvertFileAsync(SubtitleFile file)
+        private async Task ConvertFileAsync(SubtitleStatusFile file)
         {
             try
             {
-                file.StatusInfo.StatusType = StatusTypes.ConvertingProcess;
-                await new SubtitleFileConverter().ConvertFileAsync(file);
-                file.StatusInfo.StatusType = StatusTypes.CompletedProcess;
+                file.StatusType = StatusTypes.ConvertingProcess;
+                await SubtitleFileConverter.ConvertFileAsync(file);
+                file.StatusType = StatusTypes.CompletedProcess;
             }
             catch (Exception e)
             {
-                file.StatusInfo.StatusType = StatusTypes.FailedProcess;
-                file.StatusInfo.TextInfo += "\n" + e.Message;
+                file.StatusType = StatusTypes.FailedProcess;
+                file.TextInfo += "\n" + e.Message;
             }
         }
 
@@ -186,18 +180,19 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             foreach (string filePath in filePaths)
             {
-                SubtitleFile file = new(Settings) { PathLocation = filePath };
-                SubtitleFiles.Add(file);
+                SubtitleStatusFile file = DefaultFile.Clone();
+                file.PathLocation = filePath;
+                Files.Add(file);
             }
         }
 
-        public void OpenSettings(object item)
+        public void OpenSettings()
         {
             if (SettingsWindow.IsLoaded)
                 SettingsWindow.Focus();
             else
             {
-                SettingsWindow = new SettingsWindow();
+                SettingsWindow = new SettingsWindow(DefaultFile);
                 SettingsWindow.Show();
             }
         }

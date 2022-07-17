@@ -42,14 +42,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Settings\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Settings\customSettings.json">
+    <None Update="DefaultFiles\customFile.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Settings\defaultSettings.json">
+    <None Update="DefaultFiles\defaultFile.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

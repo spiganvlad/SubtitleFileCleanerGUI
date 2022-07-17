@@ -1,10 +1,9 @@
 ﻿using System.Linq;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using SubtitleFileCleanerGUI.Service;
 
 namespace SubtitleFileCleanerGUI.Model
 {
+    // Supported status types
     public enum StatusTypes
     {
         [SinglePath("/Images/WaitingProcess.png")]
@@ -21,13 +20,11 @@ namespace SubtitleFileCleanerGUI.Model
         FailedProcess
     }
 
-    public class StatusInfo : IViewableStatus, INotifyPropertyChanged
+    public class SubtitleStatusFile : SubtitleFile, ICloneableInstance<SubtitleStatusFile>, IViewableStatus
     {
         private StatusTypes statusType;
         private string imagePath;
         private string textInfo;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public StatusTypes StatusType
         {
@@ -57,20 +54,18 @@ namespace SubtitleFileCleanerGUI.Model
             }
         }
 
-        public StatusInfo(StatusTypes statusType = StatusTypes.WaitingProcess) => StatusType = statusType;
+        public SubtitleStatusFile() => StatusType = StatusTypes.WaitingProcess;
+        public SubtitleStatusFile(StatusTypes statusType) => StatusType = statusType;
 
-        private void SetStatusMeta()
+        protected virtual void SetStatusMeta()
         {
-            var pathAttributes = EnumAttributeManipulator<StatusTypes>.GetEnumAttributes<SinglePathAttribute>(StatusType);
+            var pathAttributes = EnumManipulator<StatusTypes>.GetEnumAttributes<SinglePathAttribute>(StatusType);
             ImagePath = pathAttributes.First().Path;
 
-            var textAttributes = EnumAttributeManipulator<StatusTypes>.GetEnumAttributes<StatusTextInfoAttribute>(StatusType);
+            var textAttributes = EnumManipulator<StatusTypes>.GetEnumAttributes<StatusTextInfoAttribute>(StatusType);
             TextInfo = textAttributes.First().TextInfo;
         }
 
-        public void OnPropertyChanged([CallerMemberName] string property = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+        public new SubtitleStatusFile Clone() => CloneTo<SubtitleStatusFile>();
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
 namespace SubtitleFileCleanerGUI.Service
 {
-    public static class EnumAttributeManipulator<TEnum> where TEnum : Enum
+    public static class EnumManipulator<TEnum> where TEnum : struct, Enum
     {
         public static IEnumerable<TAttribute> GetEnumAttributes<TAttribute>(TEnum enumValue) where TAttribute : Attribute
         {
@@ -12,5 +13,7 @@ namespace SubtitleFileCleanerGUI.Service
             MemberInfo[] memberInfos = enumType.GetMember(enumValue.ToString());
             return memberInfos[0].GetCustomAttributes<TAttribute>(false);
         }
+
+        public static IEnumerable<TEnum> GetAllEnumValues() => Enum.GetValues<TEnum>().Cast<TEnum>();
     }
 }
