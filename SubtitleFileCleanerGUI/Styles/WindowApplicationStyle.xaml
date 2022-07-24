@@ -1,0 +1,121 @@
+﻿<ResourceDictionary x:Class="SubtitleFileCleanerGUI.Styles.WindowApplicationStyle"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:SubtitleFileCleanerGUI.View"
+>
+
+    <Style TargetType="Button" x:Key="TitleBarButtonBase">
+        <Setter Property="MaxHeight" Value="25"/>
+        <Setter Property="MinWidth" Value="25"/>
+        <Setter Property="Margin" Value="0 2 4 2"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource TitleBarButtonBase}" x:Key="MinimizeButtonStyle">
+        <Setter Property="Command" Value="SystemCommands.MinimizeWindowCommand"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource TitleBarButtonBase}" x:Key="MaximizeButtonStyle">
+        <Setter Property="Command" Value="SystemCommands.MaximizeWindowCommand"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource TitleBarButtonBase}" x:Key="RestoreButtonStyle">
+        <Setter Property="Command" Value="SystemCommands.RestoreWindowCommand"/>
+    </Style>
+
+    <Style TargetType="Button" BasedOn="{StaticResource TitleBarButtonBase}" x:Key="CloseButtonStyle">
+        <Setter Property="Command" Value="SystemCommands.CloseWindowCommand"/>
+    </Style>
+
+    <!--Window title bar style-->
+    <Style x:Key="WindowApplicationStyle" TargetType="{x:Type local:WindowApplicationBase}">
+        <Setter Property="Icon" Value="/Images/AppIcon.ico"/>
+        <Setter Property="Background" Value="#cccccc"/>
+        <Setter Property="BorderBrush" Value="#623412" />
+
+        <!--Remove standard title bar-->
+        <Setter Property="WindowChrome.WindowChrome">
+            <Setter.Value>
+                <WindowChrome UseAeroCaptionButtons="False"
+                            CaptionHeight="{Binding Path=(SystemParameters.WindowNonClientFrameThickness).Top}" />
+            </Setter.Value>
+        </Setter>
+
+        <!--Change window content-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:WindowApplicationBase}">
+                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" x:Name="WindowBorder">
+
+                        <Grid x:Name="LayoutRoot" Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <!--Title panel grid-->
+                            <Grid x:Name="WindowTitlePanel"
+                                  Margin="0, -1, 0, 0"
+                                  Background="{TemplateBinding BorderBrush}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                            </Grid>
+
+                            <!--Window icon style-->
+                            <StackPanel Orientation="Horizontal">
+                                <Image
+                                    Source="{TemplateBinding Icon}"
+                                    VerticalAlignment="Center"
+                                    Margin="5 0 0 0"
+                                    MinHeight="{x:Static SystemParameters.SmallIconHeight}"
+                                    MaxWidth="{x:Static SystemParameters.SmallIconWidth}"
+                                    WindowChrome.IsHitTestVisibleInChrome="True">
+                                </Image>
+                            </StackPanel>
+
+                            <!--Window title style-->
+                            <ContentControl 
+                                VerticalAlignment="Center"
+                                Margin="25 0 0 0"
+                                Content="{TemplateBinding Title}"
+                                FontSize="{DynamicResource {x:Static SystemFonts.CaptionFontSize}}"
+                                IsTabStop="False"
+                                Foreground="White">
+                            </ContentControl>
+
+                            <!--Title bar buttons-->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch" WindowChrome.IsHitTestVisibleInChrome="True"
+                                        x:Name="WindowCommandButtonsPanel">
+                                
+                                <Button x:Name="MinimizeButton" Style="{StaticResource MinimizeButtonStyle}">
+                                    <Image Source="/Images/MinimizeWindow.png"/>
+                                </Button>
+                                
+                                <Button x:Name="MaximizeButton" Style="{StaticResource MaximizeButtonStyle}" Click="MaximizeButton_Click">
+                                    <Image Source="/Images/MaximizeWindow.png"/>
+                                </Button>
+                                
+                                <Button x:Name="RestoreButton" Style="{StaticResource RestoreButtonStyle}" Visibility="Collapsed" Click="RestoreButton_Click">
+                                    <Image Source="/Images/MaximizeWindow.png"/>
+                                </Button>
+                                
+                                <Button x:Name="CloseButton" Style="{StaticResource CloseButtonStyle}">
+                                    <Image Source="/Images/CloseWindow.png"/>
+                                </Button>
+                                
+                            </StackPanel>
+
+                            <!--Window main part-->
+                            <AdornerDecorator Grid.Row="1">
+                                <ContentPresenter Content="{TemplateBinding Content}" x:Name="MainContentPresenter"/>
+                            </AdornerDecorator>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
