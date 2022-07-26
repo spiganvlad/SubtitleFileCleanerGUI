@@ -1,28 +1,13 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-namespace SubtitleFileCleanerGUI.Model
+﻿namespace SubtitleFileCleanerGUI.Model
 {
-    // Supported subtitle cleaners enum
-    public enum SubtitleCleaners
-    {
-        Auto,
-        Srt,
-        Ass,
-        Vtt,
-        Sbv,
-        Sub
-    }
-
-    public class SubtitleFile : INotifyPropertyChanged
+    public class SubtitleFile : NotifyPropertyChangedObject, ICloneableInstance<SubtitleFile>, ILocatable, IDislocatable, ICleanable,
+        IDeformatable, IMinifiable
     {
         private string pathLocation;
         private string pathDestination;
-        private SubtitleCleaners targetCleaner;
+        private SubtitleCleaners cleaner;
         private bool deleteTags;
         private bool toOneLine;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public string PathLocation
         {
@@ -33,7 +18,6 @@ namespace SubtitleFileCleanerGUI.Model
                 OnPropertyChanged("PathLocation");
             }
         }
-
         public string PathDestination
         {
             get => pathDestination;
@@ -43,17 +27,15 @@ namespace SubtitleFileCleanerGUI.Model
                 OnPropertyChanged("PathDestination");
             }
         }
-
-        public SubtitleCleaners TargetCleaner
+        public SubtitleCleaners Cleaner
         {
-            get => targetCleaner;
+            get => cleaner;
             set
             {
-                targetCleaner = value;
-                OnPropertyChanged("TargetCleaner");
+                cleaner = value;
+                OnPropertyChanged("Cleaner");
             }
         }
-
         public bool DeleteTags
         {
             get => deleteTags;
@@ -63,7 +45,6 @@ namespace SubtitleFileCleanerGUI.Model
                 OnPropertyChanged("DeleteTags");
             }
         }
-
         public bool ToOneLine
         {
             get => toOneLine;
@@ -76,9 +57,16 @@ namespace SubtitleFileCleanerGUI.Model
 
         public SubtitleFile() { }
 
-        public void OnPropertyChanged([CallerMemberName] string property = "")
+        public SubtitleFile Clone() => CloneTo<SubtitleFile>();
+
+        // The method allows you to clone an object to a derived base T
+        protected virtual T CloneTo<T>() where T : SubtitleFile, new() => new()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
+            PathLocation = PathLocation,
+            PathDestination = PathDestination,
+            Cleaner = Cleaner,
+            DeleteTags = DeleteTags,
+            ToOneLine = ToOneLine
+        };
     }
 }

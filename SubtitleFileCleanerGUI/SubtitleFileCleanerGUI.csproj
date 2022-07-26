@@ -4,17 +4,61 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>AppIcon.ico</ApplicationIcon>
+    <ApplicationIcon>Images\AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="SubtitleBytesClearFormatting.dll" />
+    <None Remove="Fonts\OpenSans-Bold.ttf" />
+    <None Remove="Fonts\OpenSans-Light.ttf" />
+    <None Remove="Images\Add.png" />
+    <None Remove="Images\AppIcon.ico" />
+    <None Remove="Images\CloseWindow.png" />
+    <None Remove="Images\CompletedProcess.png" />
+    <None Remove="Images\Convert.png" />
+    <None Remove="Images\ConvertAll.png" />
+    <None Remove="Images\ConvertingProcess.png" />
+    <None Remove="Images\Delete.png" />
+    <None Remove="Images\DeleteAll.png" />
+    <None Remove="Images\FailedProcess.png" />
+    <None Remove="Images\MaximizeWindow.png" />
+    <None Remove="Images\MinimizeWindow.png" />
+    <None Remove="Images\Settings.png" />
+    <None Remove="Images\WaitingProcess.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.37" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="4.0.0" />
     <PackageReference Include="SubtitleBytesClearFormatting" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\OpenSans-Bold.ttf" />
+    <Resource Include="Fonts\OpenSans-Light.ttf" />
+    <Resource Include="Images\Add.png" />
+    <Resource Include="Images\AppIcon.ico" />
+    <Resource Include="Images\CloseWindow.png"/>
+    <Resource Include="Images\CompletedProcess.png" />
+    <Resource Include="Images\ConvertAll.png" />
+    <Resource Include="Images\ConvertingProcess.png" />
+    <Resource Include="Images\Delete.png" />
+    <Resource Include="Images\Convert.png" />
+    <Resource Include="Images\DeleteAll.png" />
+    <Resource Include="Images\FailedProcess.png" />
+    <Resource Include="Images\MaximizeWindow.png" />
+    <Resource Include="Images\MinimizeWindow.png" />
+    <Resource Include="Images\Settings.png" />
+    <Resource Include="Images\WaitingProcess.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DefaultFiles\customFile.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="DefaultFiles\defaultFile.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
