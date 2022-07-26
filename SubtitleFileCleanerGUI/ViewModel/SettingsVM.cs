@@ -7,6 +7,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
 {
     public class SettingsVM : NotifyPropertyChangedObject
     {
+        private readonly SubtitleFile mainDefaultFile;
         private SubtitleFile defaultFile;
         private RelayCommand saveSettingsCommand;
         private RelayCommand restoreSettingsCommand;
@@ -27,17 +28,24 @@ namespace SubtitleFileCleanerGUI.ViewModel
 
         public SettingsVM(SubtitleFile defaultFile)
         {
-            DefaultFile = defaultFile;
+            mainDefaultFile = defaultFile;
+            DefaultFile = DefaultFilesManipulator.LoadDefaultFile<SubtitleFile>(DefaultFileTypes.Custom);
             Cleaners = EnumManipulator<SubtitleCleaners>.GetAllEnumValues();
         }
 
         private void SaveSettings()
         {
-            DefaultFilesManipulator.SaveSettings(DefaultFile, SettingsTypes.Custom);
+            DefaultFilesManipulator.SaveDefaultFile(DefaultFile, DefaultFileTypes.Custom);
+
+            mainDefaultFile.PathDestination = DefaultFile.PathDestination;
+            mainDefaultFile.Cleaner = DefaultFile.Cleaner;
+            mainDefaultFile.DeleteTags = DefaultFile.DeleteTags;
+            mainDefaultFile.ToOneLine = DefaultFile.ToOneLine;
+
             MessageBox.Show("Settings saved successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void RestoreSettings() =>
-            DefaultFile = DefaultFilesManipulator.LoadSettings(SettingsTypes.Default);
+            DefaultFile = DefaultFilesManipulator.LoadDefaultFile<SubtitleFile>(DefaultFileTypes.Default);
     }
 }

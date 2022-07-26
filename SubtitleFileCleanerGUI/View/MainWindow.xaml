@@ -61,7 +61,8 @@
         </Grid>
 
         <DataGrid x:Name="MainDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding Files}"
-                  AllowDrop="True" Style="{StaticResource DataGridBase}" ColumnHeaderStyle="{StaticResource DataGridColumnHeader}">
+                  HeadersVisibility="Column" AllowDrop="True" Style="{StaticResource DataGridBase}"
+                  ColumnHeaderStyle="{StaticResource DataGridColumnHeader}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="PreviewDragOver">
                     <i:InvokeCommandAction Command="{Binding PreviewDragOverCommand}" PassEventArgsToCommand="True"/>

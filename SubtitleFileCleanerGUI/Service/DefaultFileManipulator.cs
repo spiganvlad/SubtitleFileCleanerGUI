@@ -7,7 +7,7 @@ using SubtitleFileCleanerGUI.Model;
 namespace SubtitleFileCleanerGUI.Service
 {
     // Supported settings types
-    public enum SettingsTypes
+    public enum DefaultFileTypes
     {
         [SinglePath("./DefaultFiles/customFile.json")]
         Custom,
@@ -17,29 +17,29 @@ namespace SubtitleFileCleanerGUI.Service
 
     public static class DefaultFilesManipulator
     {
-        public static SubtitleFile LoadSettings(SettingsTypes settingsTypes)
+        public static T LoadDefaultFile<T>(DefaultFileTypes defaultFileTypes) where T : SubtitleFile
         {
-            var attribute = EnumManipulator<SettingsTypes>.GetEnumAttributes<SinglePathAttribute>(settingsTypes);
+            var attribute = EnumManipulator<DefaultFileTypes>.GetEnumAttributes<SinglePathAttribute>(defaultFileTypes);
             using FileStream stream = new(attribute.First().Path, FileMode.Open, FileAccess.Read);
             using StreamReader file = new(stream);
             using JsonTextReader reader = new(file);
 
             JObject json = (JObject)JToken.ReadFrom(reader);
 
-            return json.ToObject<SubtitleFile>();
+            return json.ToObject<T>();
         }
 
-        public static void SaveSettings(SubtitleFile settings, SettingsTypes settingsType)
+        public static void SaveDefaultFile(SubtitleFile defaultFile, DefaultFileTypes defaultFileType)
         {
             JObject json = JObject.FromObject(new
             {
-                settings.PathDestination,
-                settings.Cleaner,
-                settings.DeleteTags,
-                settings.ToOneLine
+                defaultFile.PathDestination,
+                defaultFile.Cleaner,
+                defaultFile.DeleteTags,
+                defaultFile.ToOneLine
             });
 
-            var attributes = EnumManipulator<SettingsTypes>.GetEnumAttributes<SinglePathAttribute>(settingsType);
+            var attributes = EnumManipulator<DefaultFileTypes>.GetEnumAttributes<SinglePathAttribute>(defaultFileType);
             using FileStream stream = new(attributes.First().Path, FileMode.OpenOrCreate, FileAccess.Write);
             using StreamWriter file = new(stream);
             using JsonTextWriter writer = new(file);

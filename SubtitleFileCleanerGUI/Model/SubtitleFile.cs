@@ -57,9 +57,6 @@
 
         public SubtitleFile() { }
 
-        // The method allows you to create an object from a base (SubtitleFile) entity to a derivative (T)
-        public T CastTo<T>() where T : SubtitleFile, new() => CloneTo<T>();
-
         public SubtitleFile Clone() => CloneTo<SubtitleFile>();
 
         // The method allows you to clone an object to a derived base T

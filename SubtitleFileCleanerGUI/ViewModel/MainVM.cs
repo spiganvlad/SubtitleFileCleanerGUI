@@ -45,7 +45,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             Files = new ObservableCollection<SubtitleStatusFile>();
             Cleaners = EnumManipulator<SubtitleCleaners>.GetAllEnumValues();
-            DefaultFile = DefaultFilesManipulator.LoadSettings(SettingsTypes.Custom).CastTo<SubtitleStatusFile>();
+            DefaultFile = DefaultFilesManipulator.LoadDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom);
             SettingsWindow = new SettingsWindow(DefaultFile);
         }
 
