@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using SubtitleFileCleanerGUI.Model;
-using SubtitleBytesClearFormatting.Cleaner;
+using SubtitleBytesClearFormatting.Cleaners;
 
 namespace SubtitleFileCleanerGUI.Service
 {
@@ -16,7 +16,7 @@ namespace SubtitleFileCleanerGUI.Service
 
             ISubtitleCleanerAsync cleaner = await GetSubtitleCleaner(file.PathLocation, file.Cleaner);
 
-            byte[] resultBytes = await cleaner.DeleteFormattingAsync();
+            byte[] resultBytes = (await cleaner.DeleteFormattingAsync(await FileManipulator.ReadFileAsync(file.PathLocation))).ToArray();
 
             if (file.DeleteTags)
                 resultBytes = await DeleteFileTagsAsync(resultBytes, file.Cleaner);
@@ -56,7 +56,7 @@ namespace SubtitleFileCleanerGUI.Service
         private static async Task<ISubtitleCleanerAsync> GetSubtitleCleaner(string fileLocation, SubtitleCleaners subtitleCleaners)
         {
             var attributes = EnumManipulator<SubtitleCleaners>.GetEnumAttributes<SubtitleCleanerAttribute>(subtitleCleaners);
-            return attributes.First().GetAsyncCleaner(await FileManipulator.ReadFileAsync(fileLocation));
+            return attributes.First().GetAsyncCleaner();
         }
 
         private static async Task<byte[]> DeleteFileTagsAsync(byte[] textBytes, SubtitleCleaners subtitleCleaners)

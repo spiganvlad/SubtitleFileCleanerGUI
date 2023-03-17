@@ -1,4 +1,4 @@
-﻿using SubtitleBytesClearFormatting.Cleaner;
+﻿using SubtitleBytesClearFormatting.Cleaners;
 
 namespace SubtitleFileCleanerGUI.Model
 {

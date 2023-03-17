@@ -1,5 +1,5 @@
 ﻿using System;
-using SubtitleBytesClearFormatting.Cleaner;
+using SubtitleBytesClearFormatting.Cleaners;
 
 namespace SubtitleFileCleanerGUI.Model
 {
@@ -14,9 +14,9 @@ namespace SubtitleFileCleanerGUI.Model
             this.subtitleCleaner = subtitleCleaner;
         }
 
-        public ISubtitleCleanerAsync GetAsyncCleaner(byte[] b)
+        public ISubtitleCleanerAsync GetAsyncCleaner()
         {
-            object instance = Activator.CreateInstance(subtitleCleaner, b);
+            object instance = Activator.CreateInstance(subtitleCleaner);
             return (ISubtitleCleanerAsync)instance;
         }
     }
