@@ -1,13 +1,40 @@
-﻿namespace SubtitleFileCleanerGUI.Model
+﻿using SubtitleBytesClearFormatting.Cleaners;
+
+namespace SubtitleFileCleanerGUI.Model
 {
-    public class SubtitleFile : NotifyPropertyChangedObject, ICloneableInstance<SubtitleFile>, ILocatable, IDislocatable, ICleanable,
-        IDeformatable, IMinifiable
+    // Supported subtitle cleaners
+    public enum SubtitleCleaners
     {
-        private string pathLocation;
-        private string pathDestination;
-        private SubtitleCleaners cleaner;
-        private bool deleteTags;
-        private bool toOneLine;
+        Auto,
+        [SubtitleCleaner(typeof(SrtCleaner))]
+        [SubtitleTags("GetBasicTags")]
+        [SubtitleExtension(".srt")]
+        Srt,
+        [SubtitleCleaner(typeof(AssCleaner))]
+        [SubtitleTags("GetAssSpecificTags")]
+        [SubtitleExtension(".ass")]
+        Ass,
+        [SubtitleCleaner(typeof(VttCleaner))]
+        [SubtitleTags("GetBasicTags")]
+        [SubtitleExtension(".vtt")]
+        Vtt,
+        [SubtitleCleaner(typeof(SbvCleaner))]
+        [SubtitleTags("GetBasicTags")]
+        [SubtitleExtension(".sbv")]
+        Sbv,
+        [SubtitleCleaner(typeof(SubCleaner))]
+        [SubtitleTags("GetSubSpecificTags")]
+        [SubtitleExtension(".sub")]
+        Sub
+    }
+
+    public class SubtitleFile : NotifyPropertyChangedObject, ICloneableInstance<SubtitleFile>
+    {
+            private string pathLocation;
+            private string pathDestination;
+            private SubtitleCleaners cleaner;
+            private bool deleteTags;
+            private bool toOneLine;
 
         public string PathLocation
         {

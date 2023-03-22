@@ -20,7 +20,7 @@ namespace SubtitleFileCleanerGUI.Model
         FailedProcess
     }
 
-    public class SubtitleStatusFile : SubtitleFile, ICloneableInstance<SubtitleStatusFile>, IViewableStatus
+    public class SubtitleStatusFile : SubtitleFile, ICloneableInstance<SubtitleStatusFile>
     {
         private StatusTypes statusType;
         private string imagePath;
