@@ -14,6 +14,8 @@ namespace SubtitleFileCleanerGUI.ViewModel
 {
     public class MainVM
     {
+        private readonly ISubtitleFileConverter fileConverter;
+
         private RelayCommand addFileCommand;
         private RelayCommand removeFileCommand;
         private RelayCommand removeAllFileCommand;
@@ -41,10 +43,12 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public RelayCommand DropFileCommand => dropFileCommand ??= new RelayCommand(item => DropFile(item));
         public RelayCommand OpenSettingsCommand => openSettingsCommand ??= new RelayCommand(_ => OpenSettings());
 
-        public MainVM()
+        public MainVM(ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator)
         {
+            this.fileConverter = fileConverter;
+
             Files = new ObservableCollection<SubtitleStatusFile>();
-            Cleaners = EnumManipulator<SubtitleCleaners>.GetAllEnumValues();
+            Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
             DefaultFile = DefaultFilesManipulator.LoadDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom);
             SettingsWindow = new SettingsWindow(DefaultFile);
         }
@@ -76,7 +80,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
             try
             {
                 file.StatusType = StatusTypes.ConvertingProcess;
-                await SubtitleFileConverter.ConvertFileAsync(file);
+                await fileConverter.ConvertAsync(file);
                 file.StatusType = StatusTypes.CompletedProcess;
             }
             catch (Exception e)

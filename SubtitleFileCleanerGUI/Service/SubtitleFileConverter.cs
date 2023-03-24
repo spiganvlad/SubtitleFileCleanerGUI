@@ -1,70 +1,46 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Threading.Tasks;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleBytesClearFormatting.Cleaners;
 
 namespace SubtitleFileCleanerGUI.Service
 {
-    public static class SubtitleFileConverter
-    { 
-        public static async Task ConvertFileAsync(SubtitleFile file)
+    public class SubtitleFileConverter : ISubtitleFileConverter
+    {
+        private readonly IAutoCleanerDefiner autoDefiner;
+        private readonly ISubtitleCleanerCreator cleanerCreator;
+        private readonly ITagCollectionCreator tagsCreator;
+        private readonly IUniquePathCreator uniquePathCreator;
+        private readonly IFileManipulator fileManipulator;
+
+        public SubtitleFileConverter(IAutoCleanerDefiner autoDefiner, ISubtitleCleanerCreator cleanerCreator,
+            ITagCollectionCreator tagsCreator, IUniquePathCreator uniquePathCreator, IFileManipulator fileManipulator)
+        {
+            this.autoDefiner = autoDefiner;
+            this.cleanerCreator = cleanerCreator;
+            this.tagsCreator = tagsCreator;
+            this.uniquePathCreator = uniquePathCreator;
+            this.fileManipulator = fileManipulator;
+        }
+
+        public async Task ConvertAsync(SubtitleFile file)
         {
             if (file.Cleaner == SubtitleCleaners.Auto)
-                await Task.Run(() => DefineAutoCleaner(file));
+                file.Cleaner = autoDefiner.Define(Path.GetExtension(file.PathLocation).ToLower());
 
-            ISubtitleCleanerAsync cleaner = await GetSubtitleCleaner(file.PathLocation, file.Cleaner);
+            var cleaner = cleanerCreator.Create(file.Cleaner);
 
-            byte[] resultBytes = (await cleaner.DeleteFormattingAsync(await FileManipulator.ReadFileAsync(file.PathLocation))).ToArray();
+            var subtitleBytes = await fileManipulator.ReadFileAsync(file.PathLocation);
+            var resultBytes = (await cleaner.DeleteFormattingAsync(subtitleBytes)).ToArray();
 
             if (file.DeleteTags)
-                resultBytes = await DeleteFileTagsAsync(resultBytes, file.Cleaner);
+                resultBytes = await TxtCleaner.DeleteTagsAsync(resultBytes, tagsCreator.Create(file.Cleaner));
 
             if (file.ToOneLine)
-                resultBytes = await FileToOneLineAsync(resultBytes);
+                resultBytes = await TxtCleaner.ToOneLineAsync(resultBytes);
 
-            string destination = await Task.Run(() => FileManipulator.CreateUniquePath(file.PathLocation, file.PathDestination));
-            await FileManipulator.WriteFileAsync(destination, resultBytes);
+            var destinationPath = Path.Combine(file.PathDestination, $"{Path.GetFileNameWithoutExtension(file.PathLocation)}.txt");
+            await fileManipulator.WriteFileAsync(uniquePathCreator.Create(destinationPath), resultBytes);
         }
-
-        private static void DefineAutoCleaner(SubtitleFile file)
-        {
-            string fileExtension = Path.GetExtension(file.PathLocation).ToLower();
-            var cleaners = EnumManipulator<SubtitleCleaners>.GetAllEnumValues();
-
-            foreach (SubtitleCleaners cleaner in cleaners)
-            {
-                var attributes = EnumManipulator<SubtitleCleaners>.GetEnumAttributes<SubtitleExtensionAttribute>(cleaner);
-
-                if (!attributes.Any())
-                    continue;
-
-                foreach (SubtitleExtensionAttribute attribute in attributes)
-                {
-                    if (attribute.Extension == fileExtension)
-                    {
-                        file.Cleaner = cleaner;
-                        return;
-                    }
-                }
-            }
-
-            throw new InvalidOperationException($"Unable to define converter for {fileExtension} extension in {file.PathLocation} path");
-        }
-
-        private static async Task<ISubtitleCleanerAsync> GetSubtitleCleaner(string fileLocation, SubtitleCleaners subtitleCleaners)
-        {
-            var attributes = EnumManipulator<SubtitleCleaners>.GetEnumAttributes<SubtitleCleanerAttribute>(subtitleCleaners);
-            return attributes.First().GetAsyncCleaner();
-        }
-
-        private static async Task<byte[]> DeleteFileTagsAsync(byte[] textBytes, SubtitleCleaners subtitleCleaners)
-        {
-            var attributes = EnumManipulator<SubtitleCleaners>.GetEnumAttributes<SubtitleTagsAttribute>(subtitleCleaners);
-            return await TxtCleaner.DeleteTagsAsync(textBytes, attributes.First().GetSubtitleTagsDictionary());
-        }
-
-        private static async Task<byte[]> FileToOneLineAsync(byte[] textBytes) => await TxtCleaner.ToOneLineAsync(textBytes);
     }
 }

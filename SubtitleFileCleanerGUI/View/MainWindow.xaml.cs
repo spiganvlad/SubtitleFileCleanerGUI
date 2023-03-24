@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using SubtitleFileCleanerGUI.ViewModel;
+﻿using SubtitleFileCleanerGUI.ViewModel;
 
 namespace SubtitleFileCleanerGUI.View
 {
@@ -8,10 +7,10 @@ namespace SubtitleFileCleanerGUI.View
     /// </summary>
     public partial class MainWindow : WindowApplicationBase
     {
-        public MainWindow()
+        public MainWindow(MainVM dataContext)
         {
             InitializeComponent();
-            DataContext = new MainVM();
+            DataContext = dataContext;
         }
     }
 }

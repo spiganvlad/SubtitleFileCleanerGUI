@@ -30,7 +30,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             mainDefaultFile = defaultFile;
             DefaultFile = DefaultFilesManipulator.LoadDefaultFile<SubtitleFile>(DefaultFileTypes.Custom);
-            Cleaners = EnumManipulator<SubtitleCleaners>.GetAllEnumValues();
+            Cleaners = new EnumManipulator().GetAllEnumValues<SubtitleCleaners>();//Redesign
         }
 
         private void SaveSettings()

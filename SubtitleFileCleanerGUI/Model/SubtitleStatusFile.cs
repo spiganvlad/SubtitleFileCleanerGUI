@@ -57,12 +57,13 @@ namespace SubtitleFileCleanerGUI.Model
         public SubtitleStatusFile() => StatusType = StatusTypes.WaitingProcess;
         public SubtitleStatusFile(StatusTypes statusType) => StatusType = statusType;
 
+        //Redesign
         protected virtual void SetStatusMeta()
         {
-            var pathAttributes = EnumManipulator<StatusTypes>.GetEnumAttributes<SinglePathAttribute>(StatusType);
+            var pathAttributes = new AttributeManipulator().GetAttributes<StatusTypes, SinglePathAttribute>(StatusType);
             ImagePath = pathAttributes.First().Path;
 
-            var textAttributes = EnumManipulator<StatusTypes>.GetEnumAttributes<StatusTextInfoAttribute>(StatusType);
+            var textAttributes = new AttributeManipulator().GetAttributes<StatusTypes, StatusTextInfoAttribute>(StatusType);
             TextInfo = textAttributes.First().TextInfo;
         }
 
