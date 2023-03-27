@@ -1,4 +1,5 @@
 ﻿using SubtitleBytesClearFormatting.Cleaners;
+using SubtitleFileCleanerGUI.Attributes;
 
 namespace SubtitleFileCleanerGUI.Model
 {
@@ -28,7 +29,7 @@ namespace SubtitleFileCleanerGUI.Model
         Sub
     }
 
-    public class SubtitleFile : NotifyPropertyChangedObject, ICloneableInstance<SubtitleFile>
+    public class SubtitleFile : NotifyPropertyChangedObject
     {
             private string pathLocation;
             private string pathDestination;
@@ -81,19 +82,5 @@ namespace SubtitleFileCleanerGUI.Model
                 OnPropertyChanged("ToOneLine");
             }
         }
-
-        public SubtitleFile() { }
-
-        public SubtitleFile Clone() => CloneTo<SubtitleFile>();
-
-        // The method allows you to clone an object to a derived base T
-        protected virtual T CloneTo<T>() where T : SubtitleFile, new() => new()
-        {
-            PathLocation = PathLocation,
-            PathDestination = PathDestination,
-            Cleaner = Cleaner,
-            DeleteTags = DeleteTags,
-            ToOneLine = ToOneLine
-        };
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using SubtitleFileCleanerGUI.Service;
+using SubtitleFileCleanerGUI.Attributes;
 
 namespace SubtitleFileCleanerGUI.Model
 {
@@ -20,7 +21,7 @@ namespace SubtitleFileCleanerGUI.Model
         FailedProcess
     }
 
-    public class SubtitleStatusFile : SubtitleFile, ICloneableInstance<SubtitleStatusFile>
+    public class SubtitleStatusFile : SubtitleFile
     {
         private StatusTypes statusType;
         private string imagePath;
@@ -54,10 +55,12 @@ namespace SubtitleFileCleanerGUI.Model
             }
         }
 
-        public SubtitleStatusFile() => StatusType = StatusTypes.WaitingProcess;
-        public SubtitleStatusFile(StatusTypes statusType) => StatusType = statusType;
+        public SubtitleStatusFile()
+        {
+            StatusType = StatusTypes.WaitingProcess;
+        }
 
-        //Redesign
+        //Redesign (but how?)
         protected virtual void SetStatusMeta()
         {
             var pathAttributes = new AttributeManipulator().GetAttributes<StatusTypes, SinglePathAttribute>(StatusType);
@@ -66,7 +69,5 @@ namespace SubtitleFileCleanerGUI.Model
             var textAttributes = new AttributeManipulator().GetAttributes<StatusTypes, StatusTextInfoAttribute>(StatusType);
             TextInfo = textAttributes.First().TextInfo;
         }
-
-        public new SubtitleStatusFile Clone() => CloneTo<SubtitleStatusFile>();
     }
 }

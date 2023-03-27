@@ -1,7 +1,7 @@
 ﻿using System;
 using SubtitleBytesClearFormatting.Cleaners;
 
-namespace SubtitleFileCleanerGUI.Model
+namespace SubtitleFileCleanerGUI.Attributes
 {
     // Stores metadata about the subtitle cleaner type
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]

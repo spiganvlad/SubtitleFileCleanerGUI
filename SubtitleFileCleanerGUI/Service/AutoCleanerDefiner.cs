@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Attributes;
 
 namespace SubtitleFileCleanerGUI.Service
 {

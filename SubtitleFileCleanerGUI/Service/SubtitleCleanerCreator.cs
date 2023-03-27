@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using SubtitleBytesClearFormatting.Cleaners;
 using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Attributes;
 
 namespace SubtitleFileCleanerGUI.Service
 {

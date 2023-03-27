@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SubtitleBytesClearFormatting.TagsGenerate;
 
-namespace SubtitleFileCleanerGUI.Model
+namespace SubtitleFileCleanerGUI.Attributes
 {
     // Stores metadata about the method for getting tags
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
@@ -18,7 +18,7 @@ namespace SubtitleFileCleanerGUI.Model
         public Dictionary<byte, List<TxtTag>> GetSubtitleTagsDictionary()
         {
             Type type = typeof(TagsCollectionGeneretor);
-            return (Dictionary<byte, List<TxtTag>>) type.GetMethod(methodName).Invoke(null, null);
+            return (Dictionary<byte, List<TxtTag>>)type.GetMethod(methodName).Invoke(null, null);
         }
     }
 }

@@ -1,50 +1,43 @@
-﻿using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System.Linq;
+using Microsoft.Extensions.Configuration;
 using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Attributes;
 
 namespace SubtitleFileCleanerGUI.Service
 {
-    // Supported settings types
-    public enum DefaultFileTypes
+    public class DefaultFilesManipulator : IDefaultFileManipulator
     {
-        [SinglePath("./DefaultFiles/customFile.json")]
-        Custom,
-        [SinglePath("./DefaultFiles/defaultFile.json")]
-        Default
-    }
-    //Redesign class
-    public static class DefaultFilesManipulator
-    {
-        public static T LoadDefaultFile<T>(DefaultFileTypes defaultFileTypes) where T : SubtitleFile
+        private readonly IConfiguration configuration;
+        private readonly IAttributeManipulator attributeManipulator;
+
+        public DefaultFilesManipulator(IConfiguration configuration, IAttributeManipulator attributeManipulator)
         {
-            var attribute = new AttributeManipulator().GetAttributes<DefaultFileTypes, SinglePathAttribute>(defaultFileTypes);
-            using FileStream stream = new(attribute.First().Path, FileMode.Open, FileAccess.Read);
-            using StreamReader file = new(stream);
-            using JsonTextReader reader = new(file);
-
-            JObject json = (JObject)JToken.ReadFrom(reader);
-
-            return json.ToObject<T>();
+            this.configuration = configuration;
+            this.attributeManipulator = attributeManipulator;
         }
 
-        public static void SaveDefaultFile(SubtitleFile defaultFile, DefaultFileTypes defaultFileType)
+        public T GetDefaultFile<T>(DefaultFileTypes fileType) where T: SubtitleFile, new()
         {
-            JObject json = JObject.FromObject(new
-            {
-                defaultFile.PathDestination,
-                defaultFile.Cleaner,
-                defaultFile.DeleteTags,
-                defaultFile.ToOneLine
-            });
+            var attributes = attributeManipulator.GetAttributes<DefaultFileTypes, SinglePathAttribute>(fileType);
+            var path = attributes.First().Path;
 
-            var attributes = new AttributeManipulator().GetAttributes<DefaultFileTypes, SinglePathAttribute>(defaultFileType);
-            using FileStream stream = new(attributes.First().Path, FileMode.OpenOrCreate, FileAccess.Write);
-            using StreamWriter file = new(stream);
-            using JsonTextWriter writer = new(file);
+            var destinationPath = configuration.GetValue<string>($"{path}:PathDestination");
+            var cleaner = configuration.GetValue<SubtitleCleaners>($"{path}:SubtitleConverter");
+            var deleteTags = configuration.GetValue<bool>($"{path}:DeleteTagsOption");
+            var toOneLine = configuration.GetValue<bool>($"{path}:ToOneLineOption");
 
-            json.WriteTo(writer);
+            return new T { PathDestination = destinationPath, Cleaner = cleaner, DeleteTags = deleteTags, ToOneLine = toOneLine };
+        }
+
+        public void SetDefaultFile(SubtitleFile file, DefaultFileTypes fileTypes)
+        {
+            var attributes = attributeManipulator.GetAttributes<DefaultFileTypes, SinglePathAttribute>(fileTypes);
+            var path = attributes.First().Path;
+
+            configuration[$"{path}:PathDestination"] = file.PathDestination;
+            configuration[$"{path}:SubtitleConverter"] = file.Cleaner.ToString();
+            configuration[$"{path}:DeleteTagsOption"] = file.DeleteTags.ToString();
+            configuration[$"{path}:ToOneLineOption"] = file.ToOneLine.ToString();
         }
     }
 }

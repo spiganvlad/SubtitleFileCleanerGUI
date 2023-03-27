@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Ookii.Dialogs.Wpf;
-using SubtitleFileCleanerGUI.View;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service;
 
@@ -15,6 +14,8 @@ namespace SubtitleFileCleanerGUI.ViewModel
     public class MainVM
     {
         private readonly ISubtitleFileConverter fileConverter;
+        private readonly IDefaultFileManipulator defaultFileManipulator;
+        private readonly ISettingsWindowCreator settingsWindowCreator;
 
         private RelayCommand addFileCommand;
         private RelayCommand removeFileCommand;
@@ -29,8 +30,6 @@ namespace SubtitleFileCleanerGUI.ViewModel
 
         public ObservableCollection<SubtitleStatusFile> Files { get; }
         public IEnumerable<SubtitleCleaners> Cleaners { get; }
-        private SubtitleStatusFile DefaultFile { get; }
-        private Window SettingsWindow { get; set; }
 
         public RelayCommand AddFileCommand => addFileCommand ??= new RelayCommand(_ => AddFile());
         public RelayCommand RemoveFileCommand => removeFileCommand ??= new RelayCommand(item => RemoveFile(item));
@@ -43,17 +42,18 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public RelayCommand DropFileCommand => dropFileCommand ??= new RelayCommand(item => DropFile(item));
         public RelayCommand OpenSettingsCommand => openSettingsCommand ??= new RelayCommand(_ => OpenSettings());
 
-        public MainVM(ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator)
+        public MainVM(ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator, IDefaultFileManipulator defaultFileManipulator,
+            ISettingsWindowCreator settingsWindowCreator)
         {
             this.fileConverter = fileConverter;
+            this.defaultFileManipulator = defaultFileManipulator;
+            this.settingsWindowCreator = settingsWindowCreator;
 
             Files = new ObservableCollection<SubtitleStatusFile>();
             Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
-            DefaultFile = DefaultFilesManipulator.LoadDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom);
-            SettingsWindow = new SettingsWindow(DefaultFile);
         }
 
-        private void AddFile() => Files.Add(DefaultFile.Clone());
+        private void AddFile() => Files.Add(defaultFileManipulator.GetDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom));
 
         private void RemoveFile(object item)
         {
@@ -184,21 +184,13 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             foreach (string filePath in filePaths)
             {
-                SubtitleStatusFile file = DefaultFile.Clone();
+                var file = defaultFileManipulator.GetDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom);
                 file.PathLocation = filePath;
                 Files.Add(file);
             }
         }
 
-        public void OpenSettings()
-        {
-            if (SettingsWindow.IsLoaded)
-                SettingsWindow.Focus();
-            else
-            {
-                SettingsWindow = new SettingsWindow(DefaultFile);
-                SettingsWindow.Show();
-            }
-        }
+        public void OpenSettings() =>
+            settingsWindowCreator.Create().Show();
     }
 }

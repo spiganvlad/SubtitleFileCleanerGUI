@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SubtitleBytesClearFormatting.TagsGenerate;
 using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Attributes;
 
 namespace SubtitleFileCleanerGUI.Service
 {
