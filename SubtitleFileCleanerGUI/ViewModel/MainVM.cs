@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Controls;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Collections.ObjectModel;
 using Ookii.Dialogs.Wpf;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service;
+using SubtitleFileCleanerGUI.Service.Input;
 
 namespace SubtitleFileCleanerGUI.ViewModel
 {
@@ -17,33 +19,33 @@ namespace SubtitleFileCleanerGUI.ViewModel
         private readonly IDefaultFileManipulator defaultFileManipulator;
         private readonly ISettingsWindowCreator settingsWindowCreator;
 
-        private RelayCommand addFileCommand;
-        private RelayCommand removeFileCommand;
-        private RelayCommand removeAllFileCommand;
-        private RelayCommand convertFileCommand;
-        private RelayCommand convertAllFilesCommand;
-        private RelayCommand getFileLocationCommand;
-        private RelayCommand getFileDestinationCommand;
-        private RelayCommand previewDragOverCommand;
-        private RelayCommand dropFileCommand;
-        private RelayCommand openSettingsCommand;
+        private readonly ICommand addFileCommand;
+        private readonly ICommand removeFileCommand;
+        private readonly ICommand removeAllFileCommand;
+        private readonly ICommand convertFileCommand;
+        private readonly ICommand convertAllFilesCommand;
+        private readonly ICommand getFileLocationCommand;
+        private readonly ICommand getFileDestinationCommand;
+        private readonly ICommand previewDragOverCommand;
+        private readonly ICommand dropFileCommand;
+        private readonly ICommand openSettingsCommand;
 
         public ObservableCollection<SubtitleStatusFile> Files { get; }
         public IEnumerable<SubtitleCleaners> Cleaners { get; }
 
-        public RelayCommand AddFileCommand => addFileCommand ??= new RelayCommand(_ => AddFile());
-        public RelayCommand RemoveFileCommand => removeFileCommand ??= new RelayCommand(item => RemoveFile(item));
-        public RelayCommand RemoveAllFileCommand => removeAllFileCommand ??= new RelayCommand(_ => RemoveAllFile());
-        public RelayCommand ConvertFileCommand => convertFileCommand ??= new RelayCommand(item => ConvertFile(item));
-        public RelayCommand ConvertAllFilesCommand => convertAllFilesCommand ??= new RelayCommand(_ => ConvertAllFiles());
-        public RelayCommand GetFileLocationCommand => getFileLocationCommand ??= new RelayCommand(item => GetFileLocation(item));
-        public RelayCommand GetFileDestinationCommand => getFileDestinationCommand ??= new RelayCommand(item => GetFileDestination(item));
-        public RelayCommand PreviewDragOverCommand => previewDragOverCommand ??= new RelayCommand(item => PreviewDragOver(item));
-        public RelayCommand DropFileCommand => dropFileCommand ??= new RelayCommand(item => DropFile(item));
-        public RelayCommand OpenSettingsCommand => openSettingsCommand ??= new RelayCommand(_ => OpenSettings());
+        public ICommand AddFileCommand => addFileCommand;
+        public ICommand RemoveFileCommand => removeFileCommand;
+        public ICommand RemoveAllFileCommand => removeAllFileCommand;
+        public ICommand ConvertFileCommand => convertFileCommand;
+        public ICommand ConvertAllFilesCommand => convertAllFilesCommand;
+        public ICommand GetFileLocationCommand => getFileLocationCommand;
+        public ICommand GetFileDestinationCommand => getFileDestinationCommand;
+        public ICommand PreviewDragOverCommand => previewDragOverCommand;
+        public ICommand DropFileCommand => dropFileCommand;
+        public ICommand OpenSettingsCommand => openSettingsCommand;
 
         public MainVM(ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator, IDefaultFileManipulator defaultFileManipulator,
-            ISettingsWindowCreator settingsWindowCreator)
+            ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator, IGenericCommandCreator genericCommandCreator)
         {
             this.fileConverter = fileConverter;
             this.defaultFileManipulator = defaultFileManipulator;
@@ -51,29 +53,27 @@ namespace SubtitleFileCleanerGUI.ViewModel
 
             Files = new ObservableCollection<SubtitleStatusFile>();
             Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
+
+            addFileCommand = commandCreator.Create(AddFile);
+            removeFileCommand = genericCommandCreator.Create<SubtitleStatusFile>(RemoveFile);
+            removeAllFileCommand = commandCreator.Create(RemoveAllFile);
+            convertFileCommand = genericCommandCreator.Create<SubtitleStatusFile>(async file => await ConvertFileAsync(file));
+            convertAllFilesCommand = commandCreator.Create(async () => await ConvertAllFilesAsync());
+            getFileLocationCommand = genericCommandCreator.Create<SubtitleFile>(GetFileLocation);
+            getFileDestinationCommand = genericCommandCreator.Create<SubtitleFile>(GetFileDestination);
+            previewDragOverCommand = genericCommandCreator.Create<DragEventArgs>(PreviewDragOver);
+            dropFileCommand = genericCommandCreator.Create<DragEventArgs>(DropFile);
+            openSettingsCommand = commandCreator.Create(OpenSettings);
         }
 
-        private void AddFile() => Files.Add(defaultFileManipulator.GetDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom));
-
-        private void RemoveFile(object item)
-        {
-            if (item != null)
-                Files.Remove((SubtitleStatusFile)item);
-        }
-
-        private void RemoveAllFile() => Files.Clear();
-
-        private void ConvertFile(object item)
-        {
-            if (item is SubtitleStatusFile file)
-                Task.Run(async () => await ConvertFileAsync(file));
-        }
-
-        private void ConvertAllFiles()
-        {
-            foreach (SubtitleStatusFile file in Files)
-                Task.Run(async () => await ConvertFileAsync(file));
-        }
+        private void AddFile() =>
+            Files.Add(defaultFileManipulator.GetDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom));
+        
+        private void RemoveFile(SubtitleStatusFile file) =>
+            Files.Remove(file);
+        
+        private void RemoveAllFile() =>
+            Files.Clear();
 
         private async Task ConvertFileAsync(SubtitleStatusFile file)
         {
@@ -90,65 +90,59 @@ namespace SubtitleFileCleanerGUI.ViewModel
             }
         }
 
-        private void GetFileLocation(object item)
+        private async Task ConvertAllFilesAsync()
         {
-            if (item is SubtitleFile file)
-            {
-                VistaOpenFileDialog dialog = new();
-                bool? success = dialog.ShowDialog();
-
-                if (success == true)
-                    file.PathLocation = dialog.FileName;
-            }
+            foreach (var file in Files)
+                await ConvertFileAsync(file);
         }
 
-        private void GetFileDestination(object item)
+        private void GetFileLocation(SubtitleFile file)
         {
-            if (item is SubtitleFile file)
-            {
-                VistaFolderBrowserDialog dialog = new();
-                bool? success = dialog.ShowDialog();
+            VistaOpenFileDialog dialog = new();
+            bool? success = dialog.ShowDialog();
 
-                if (success == true)
-                    file.PathDestination = dialog.SelectedPath;
-            }
+            if (success == true)
+                file.PathLocation = dialog.FileName;
         }
 
-        private void PreviewDragOver(object item)
+        private void GetFileDestination(SubtitleFile file)
         {
-            if (item is DragEventArgs eventArgs)
-                eventArgs.Handled = true;
+            VistaFolderBrowserDialog dialog = new();
+            bool? success = dialog.ShowDialog();
+
+            if (success == true)
+                file.PathDestination = dialog.SelectedPath;
         }
 
-        private void DropFile(object item)
+        private void PreviewDragOver(DragEventArgs eventArgs) =>
+            eventArgs.Handled = true;
+        
+        private void DropFile(DragEventArgs eventArgs)
         {
             try
             {
-                if (item is DragEventArgs eventArgs)
+                string[] files;
+                if (eventArgs.Data.GetDataPresent(DataFormats.FileDrop))
+                    files = (string[])eventArgs.Data.GetData(DataFormats.FileDrop);
+                else
+                    return;
+
+                // Define where the file was dropped
+                if (eventArgs.OriginalSource is Border border && border.TemplatedParent is Button button)
                 {
-                    string[] files;
-                    if (eventArgs.Data.GetDataPresent(DataFormats.FileDrop))
-                        files = (string[])eventArgs.Data.GetData(DataFormats.FileDrop);
-                    else
-                        return;
-
-                    // Define where the file was dropped
-                    if (eventArgs.OriginalSource is Border border && border.TemplatedParent is Button button)
-                    {
-                        DropFileFromButton(button, files);
-                        return;
-                    }
-
-                    Type type = eventArgs.OriginalSource.GetType();
-                    if ("TextBoxView" == type.Name)
-                    {
-                        if (type.GetProperty("Parent").GetValue(eventArgs.OriginalSource, null) is ScrollViewer scroll &&
-                            scroll.TemplatedParent is TextBox textBox)
-                            DropFileSetPath(textBox, files);
-                    }
-                    else
-                        DropFileAddNew(files);
+                    DropFileFromButton(button, files);
+                    return;
                 }
+
+                Type type = eventArgs.OriginalSource.GetType();
+                if ("TextBoxView" == type.Name)
+                {
+                    if (type.GetProperty("Parent").GetValue(eventArgs.OriginalSource, null) is ScrollViewer scroll &&
+                        scroll.TemplatedParent is TextBox textBox)
+                        DropFileSetPath(textBox, files);
+                }
+                else
+                    DropFileAddNew(files);
             }
             catch
             {

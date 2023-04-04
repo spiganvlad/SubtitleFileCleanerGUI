@@ -1,7 +1,9 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using System.Collections.Generic;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service;
+using SubtitleFileCleanerGUI.Service.Input;
 
 namespace SubtitleFileCleanerGUI.ViewModel
 {
@@ -9,11 +11,12 @@ namespace SubtitleFileCleanerGUI.ViewModel
     {
         private readonly IDefaultFileManipulator defaultFileManipulator;
 
-        private SubtitleFile defaultFile;
-        private RelayCommand saveSettingsCommand;
-        private RelayCommand restoreSettingsCommand;
+        private readonly ICommand saveSettingsCommand;
+        private readonly ICommand restoreSettingsCommand;
 
-        public IEnumerable<SubtitleCleaners> Cleaners { get; private set; }
+        private SubtitleFile defaultFile;
+
+        public IEnumerable<SubtitleCleaners> Cleaners { get; }
         public SubtitleFile DefaultFile
         { 
             get => defaultFile;
@@ -24,15 +27,19 @@ namespace SubtitleFileCleanerGUI.ViewModel
             }
         }
 
-        public RelayCommand SaveSettingsCommand => saveSettingsCommand ??= new RelayCommand(_ => SaveSettings());
-        public RelayCommand RestoreSettingsCommand => restoreSettingsCommand ??= new RelayCommand(_ => RestoreSettings());
+        public ICommand SaveSettingsCommand => saveSettingsCommand;
+        public ICommand RestoreSettingsCommand => restoreSettingsCommand;
 
-        public SettingsVM(IDefaultFileManipulator defaultFileManipulator, IEnumManipulator enumManipulator)
+        public SettingsVM(IDefaultFileManipulator defaultFileManipulator, IEnumManipulator enumManipulator,
+            ICommandCreator commandCreator)
         {
             this.defaultFileManipulator = defaultFileManipulator;
 
             DefaultFile = defaultFileManipulator.GetDefaultFile<SubtitleFile>(DefaultFileTypes.Custom);
             Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
+
+            saveSettingsCommand = commandCreator.Create(SaveSettings);
+            restoreSettingsCommand = commandCreator.Create(RestoreSettings);
         }
 
         private void SaveSettings()
