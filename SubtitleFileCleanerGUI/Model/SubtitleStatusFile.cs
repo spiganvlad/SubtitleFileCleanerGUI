@@ -42,7 +42,7 @@ namespace SubtitleFileCleanerGUI.Model
             set
             {
                 imagePath = value;
-                OnPropertyChanged("ImagePath");
+                OnPropertyChanged(nameof(ImagePath));
             }
         }
         public string TextInfo
@@ -51,7 +51,7 @@ namespace SubtitleFileCleanerGUI.Model
             set
             {
                 textInfo = value;
-                OnPropertyChanged("TextInfo");
+                OnPropertyChanged(nameof(TextInfo));
             }
         }
 

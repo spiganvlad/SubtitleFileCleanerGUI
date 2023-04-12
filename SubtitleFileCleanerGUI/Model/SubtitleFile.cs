@@ -1,4 +1,5 @@
-﻿using SubtitleBytesClearFormatting.Cleaners;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using SubtitleBytesClearFormatting.Cleaners;
 using SubtitleFileCleanerGUI.Attributes;
 
 namespace SubtitleFileCleanerGUI.Model
@@ -29,7 +30,7 @@ namespace SubtitleFileCleanerGUI.Model
         Sub
     }
 
-    public class SubtitleFile : NotifyPropertyChangedObject
+    public class SubtitleFile : ObservableObject
     {
             private string pathLocation;
             private string pathDestination;
@@ -43,7 +44,7 @@ namespace SubtitleFileCleanerGUI.Model
             set
             {
                 pathLocation = value;
-                OnPropertyChanged("PathLocation");
+                OnPropertyChanged(nameof(PathLocation));
             }
         }
         public string PathDestination
@@ -52,7 +53,7 @@ namespace SubtitleFileCleanerGUI.Model
             set
             {
                 pathDestination = value;
-                OnPropertyChanged("PathDestination");
+                OnPropertyChanged(nameof(PathDestination));
             }
         }
         public SubtitleCleaners Cleaner
@@ -61,7 +62,7 @@ namespace SubtitleFileCleanerGUI.Model
             set
             {
                 cleaner = value;
-                OnPropertyChanged("Cleaner");
+                OnPropertyChanged(nameof(Cleaner));
             }
         }
         public bool DeleteTags
@@ -70,7 +71,7 @@ namespace SubtitleFileCleanerGUI.Model
             set
             {
                 deleteTags = value;
-                OnPropertyChanged("DeleteTags");
+                OnPropertyChanged(nameof(DeleteTags));
             }
         }
         public bool ToOneLine
@@ -79,7 +80,7 @@ namespace SubtitleFileCleanerGUI.Model
             set
             {
                 toOneLine = value;
-                OnPropertyChanged("ToOneLine");
+                OnPropertyChanged(nameof(ToOneLine));
             }
         }
     }

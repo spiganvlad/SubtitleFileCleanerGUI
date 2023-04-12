@@ -1,13 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service;
 using SubtitleFileCleanerGUI.Service.Input;
 
 namespace SubtitleFileCleanerGUI.ViewModel
 {
-    public class SettingsVM : NotifyPropertyChangedObject
+    public class SettingsVM : ObservableObject
     {
         private readonly IDefaultFileManipulator defaultFileManipulator;
 
@@ -23,7 +24,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
             private set
             {
                 defaultFile = value;
-                OnPropertyChanged("DefaultFile");
+                OnPropertyChanged(nameof(DefaultFile));
             }
         }
 
