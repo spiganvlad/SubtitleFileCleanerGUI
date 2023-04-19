@@ -45,7 +45,8 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public ICommand OpenSettingsCommand => openSettingsCommand;
 
         public MainVM(ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator, IDefaultFileManipulator defaultFileManipulator,
-            ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator, IGenericCommandCreator genericCommandCreator)
+            ISettingsWindowCreator settingsWindowCreator, IParameterlessCommandCreator parameterlessCommandCreator,
+            IParameterizedCommandCreator parameterizedCommandCreator)
         {
             this.fileConverter = fileConverter;
             this.defaultFileManipulator = defaultFileManipulator;
@@ -54,16 +55,16 @@ namespace SubtitleFileCleanerGUI.ViewModel
             Files = new ObservableCollection<SubtitleStatusFile>();
             Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
 
-            addFileCommand = commandCreator.Create(AddFile);
-            removeFileCommand = genericCommandCreator.Create<SubtitleStatusFile>(RemoveFile);
-            removeAllFileCommand = commandCreator.Create(RemoveAllFile);
-            convertFileCommand = genericCommandCreator.Create<SubtitleStatusFile>(async file => await ConvertFileAsync(file));
-            convertAllFilesCommand = commandCreator.Create(async () => await ConvertAllFilesAsync());
-            getFileLocationCommand = genericCommandCreator.Create<SubtitleFile>(GetFileLocation);
-            getFileDestinationCommand = genericCommandCreator.Create<SubtitleFile>(GetFileDestination);
-            previewDragOverCommand = genericCommandCreator.Create<DragEventArgs>(PreviewDragOver);
-            dropFileCommand = genericCommandCreator.Create<DragEventArgs>(DropFile);
-            openSettingsCommand = commandCreator.Create(OpenSettings);
+            addFileCommand = parameterlessCommandCreator.Create(AddFile);
+            removeFileCommand = parameterizedCommandCreator.Create<SubtitleStatusFile>(RemoveFile);
+            removeAllFileCommand = parameterlessCommandCreator.Create(RemoveAllFile);
+            convertFileCommand = parameterizedCommandCreator.Create<SubtitleStatusFile>(async file => await ConvertFileAsync(file));
+            convertAllFilesCommand = parameterlessCommandCreator.Create(async () => await ConvertAllFilesAsync());
+            getFileLocationCommand = parameterizedCommandCreator.Create<SubtitleFile>(GetFileLocation);
+            getFileDestinationCommand = parameterizedCommandCreator.Create<SubtitleFile>(GetFileDestination);
+            previewDragOverCommand = parameterizedCommandCreator.Create<DragEventArgs>(PreviewDragOver);
+            dropFileCommand = parameterizedCommandCreator.Create<DragEventArgs>(DropFile);
+            openSettingsCommand = parameterlessCommandCreator.Create(OpenSettings);
         }
 
         private void AddFile() =>
@@ -150,7 +151,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
             }
         }
 
-        // Search parant grid 
+        // Search parent grid 
         private void DropFileFromButton(Button button, string[] filePaths)
         {
             if (button.Parent is Grid grid)

@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace SubtitleFileCleanerGUI.Service.Input
 {
-    public class GenericRelayCommandCreator : IGenericCommandCreator
+    public class ParameterizedRelayCommandCreator : IParameterizedCommandCreator
     {
         public ICommand Create<TParameter>(Action<TParameter> execute, Predicate<TParameter> canExecute = null)
         {

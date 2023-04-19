@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace SubtitleFileCleanerGUI.Service.Input
 {
-    public interface ICommandCreator
+    public interface IParameterlessCommandCreator
     {
         public ICommand Create(Action execute, Func<bool> canExecute = null);
     }

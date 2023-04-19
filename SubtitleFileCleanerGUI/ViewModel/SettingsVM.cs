@@ -32,15 +32,15 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public ICommand RestoreSettingsCommand => restoreSettingsCommand;
 
         public SettingsVM(IDefaultFileManipulator defaultFileManipulator, IEnumManipulator enumManipulator,
-            ICommandCreator commandCreator)
+            IParameterlessCommandCreator parameterlessCommandCreator)
         {
             this.defaultFileManipulator = defaultFileManipulator;
 
             DefaultFile = defaultFileManipulator.GetDefaultFile<SubtitleFile>(DefaultFileTypes.Custom);
             Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
 
-            saveSettingsCommand = commandCreator.Create(SaveSettings);
-            restoreSettingsCommand = commandCreator.Create(RestoreSettings);
+            saveSettingsCommand = parameterlessCommandCreator.Create(SaveSettings);
+            restoreSettingsCommand = parameterlessCommandCreator.Create(RestoreSettings);
         }
 
         private void SaveSettings()

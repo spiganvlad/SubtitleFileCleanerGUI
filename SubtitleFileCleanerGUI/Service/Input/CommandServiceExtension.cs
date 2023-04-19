@@ -7,8 +7,8 @@ namespace SubtitleFileCleanerGUI.Service.Input
         public static IServiceCollection AddCommands(this IServiceCollection services)
         {
             return services
-                .AddSingleton<IGenericCommandCreator, GenericRelayCommandCreator>()
-                .AddSingleton<ICommandCreator, RelayCommandCreator>();
+                .AddSingleton<IParameterizedCommandCreator, ParameterizedRelayCommandCreator>()
+                .AddSingleton<IParameterlessCommandCreator, ParameterlessRelayCommandCreator>();
         }
     }
 }
