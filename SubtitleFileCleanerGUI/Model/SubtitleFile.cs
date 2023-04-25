@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using SubtitleBytesClearFormatting.Cleaners;
+using SubtitleBytesClearFormatting.TagsGenerate;
 using SubtitleFileCleanerGUI.Attributes;
 
 namespace SubtitleFileCleanerGUI.Model
@@ -9,23 +10,23 @@ namespace SubtitleFileCleanerGUI.Model
     {
         Auto,
         [SubtitleCleaner(typeof(SrtCleaner))]
-        [SubtitleTags("GetBasicTags")]
+        [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
         [SubtitleExtension(".srt")]
         Srt,
         [SubtitleCleaner(typeof(AssCleaner))]
-        [SubtitleTags("GetAssSpecificTags")]
+        [SubtitleTags(nameof(TagsCollectionGeneretor.GetAssSpecificTags))]
         [SubtitleExtension(".ass")]
         Ass,
         [SubtitleCleaner(typeof(VttCleaner))]
-        [SubtitleTags("GetBasicTags")]
+        [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
         [SubtitleExtension(".vtt")]
         Vtt,
         [SubtitleCleaner(typeof(SbvCleaner))]
-        [SubtitleTags("GetBasicTags")]
+        [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
         [SubtitleExtension(".sbv")]
         Sbv,
         [SubtitleCleaner(typeof(SubCleaner))]
-        [SubtitleTags("GetSubSpecificTags")]
+        [SubtitleTags(nameof(TagsCollectionGeneretor.GetSubSpecificTags))]
         [SubtitleExtension(".sub")]
         Sub
     }
