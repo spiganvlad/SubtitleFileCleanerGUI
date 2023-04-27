@@ -3,8 +3,9 @@ using System.Windows.Input;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SubtitleFileCleanerGUI.Model;
-using SubtitleFileCleanerGUI.Service;
 using SubtitleFileCleanerGUI.Service.Input;
+using SubtitleFileCleanerGUI.Service.Utility;
+using SubtitleFileCleanerGUI.Service.Settings;
 
 namespace SubtitleFileCleanerGUI.ViewModel
 {

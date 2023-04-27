@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace SubtitleFileCleanerGUI.Service
+namespace SubtitleFileCleanerGUI.Service.IO
 {
     public class FileManipulator : IFileManipulator
     {

@@ -2,8 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Attributes;
+using SubtitleFileCleanerGUI.Service.Utility;
 
-namespace SubtitleFileCleanerGUI.Service
+namespace SubtitleFileCleanerGUI.Service.Settings
 {
     public class DefaultFilesManipulator : IDefaultFileManipulator
     {
@@ -16,7 +17,7 @@ namespace SubtitleFileCleanerGUI.Service
             this.attributeManipulator = attributeManipulator;
         }
 
-        public T GetDefaultFile<T>(DefaultFileTypes fileType) where T: SubtitleFile, new()
+        public T GetDefaultFile<T>(DefaultFileTypes fileType) where T : SubtitleFile, new()
         {
             var attributes = attributeManipulator.GetAttributes<DefaultFileTypes, SinglePathAttribute>(fileType);
             var path = attributes.First().Path;

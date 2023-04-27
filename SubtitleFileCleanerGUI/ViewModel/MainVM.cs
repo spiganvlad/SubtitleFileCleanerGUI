@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Ookii.Dialogs.Wpf;
 using SubtitleFileCleanerGUI.Model;
-using SubtitleFileCleanerGUI.Service;
 using SubtitleFileCleanerGUI.Service.Input;
+using SubtitleFileCleanerGUI.Service.Utility;
+using SubtitleFileCleanerGUI.Service.Settings;
+using SubtitleFileCleanerGUI.Service.SubtitleConversion;
 
 namespace SubtitleFileCleanerGUI.ViewModel
 {

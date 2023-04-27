@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using SubtitleFileCleanerGUI.Model;
 
-namespace SubtitleFileCleanerGUI.Service
+namespace SubtitleFileCleanerGUI.Service.SubtitleConversion
 {
     public interface ISubtitleFileConverter
     {

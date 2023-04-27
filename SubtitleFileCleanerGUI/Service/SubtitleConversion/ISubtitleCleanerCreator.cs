@@ -1,7 +1,7 @@
 ﻿using SubtitleBytesClearFormatting.Cleaners;
 using SubtitleFileCleanerGUI.Model;
 
-namespace SubtitleFileCleanerGUI.Service
+namespace SubtitleFileCleanerGUI.Service.SubtitleConversion
 {
     public interface ISubtitleCleanerCreator
     {

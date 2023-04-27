@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using SubtitleFileCleanerGUI.View;
 using SubtitleFileCleanerGUI.Service;
 using SubtitleFileCleanerGUI.ViewModel;
-using SubtitleFileCleanerGUI.Service.Input;
 
 namespace SubtitleFileCleanerGUI
 {
@@ -24,17 +23,11 @@ namespace SubtitleFileCleanerGUI
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddCommands();
-            services.AddSingleton<IUniquePathCreator, UniquePathCreator>();
-            services.AddSingleton<IFileManipulator, FileManipulator>();
-            services.AddSingleton<IEnumManipulator, EnumManipulator>();
-            services.AddSingleton<IAttributeManipulator, AttributeManipulator>();
-            services.AddSingleton<IDefaultFileManipulator, DefaultFilesManipulator>();
-            services.AddSingleton<IAutoCleanerDefiner, AutoCleanerDefiner>();
-            services.AddSingleton<ISubtitleCleanerCreator, SubtitleCleanerCreator>();
-            services.AddSingleton<ITagCollectionCreator, TagCollectionCreator>();
-            services.AddSingleton<ISubtitleFileConverter, SubtitleFileConverter>();
-            services.AddSingleton<ISettingsWindowCreator, SettingsWindowCreator>();
+            services.AddInputCommands();
+            services.AddIO();
+            services.AddUtilities();
+            services.AddSettings();
+            services.AddSubtitleConversion();
             services.AddSingleton<MainVM>();
             services.AddSingleton<MainWindow>();
             services.AddTransient<SettingsVM>();

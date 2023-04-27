@@ -1,7 +1,7 @@
 ﻿using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Attributes;
 
-namespace SubtitleFileCleanerGUI.Service
+namespace SubtitleFileCleanerGUI.Service.Settings
 {
     // Supported settings types
     public enum DefaultFileTypes
@@ -14,7 +14,7 @@ namespace SubtitleFileCleanerGUI.Service
 
     public interface IDefaultFileManipulator
     {
-        public T GetDefaultFile<T>(DefaultFileTypes fileType) where T: SubtitleFile, new();
+        public T GetDefaultFile<T>(DefaultFileTypes fileType) where T : SubtitleFile, new();
         public void SetDefaultFile(SubtitleFile file, DefaultFileTypes fileType);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using SubtitleFileCleanerGUI.Service;
+using SubtitleFileCleanerGUI.Service.Utility; //Remove after problem 'SetStatusMeta()' solved
 using SubtitleFileCleanerGUI.Attributes;
 
 namespace SubtitleFileCleanerGUI.Model

@@ -1,4 +1,4 @@
-﻿namespace SubtitleFileCleanerGUI.Service
+﻿namespace SubtitleFileCleanerGUI.Service.IO
 {
     public interface IUniquePathCreator
     {

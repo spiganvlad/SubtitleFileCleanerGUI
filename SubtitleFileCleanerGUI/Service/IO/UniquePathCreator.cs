@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace SubtitleFileCleanerGUI.Service
+namespace SubtitleFileCleanerGUI.Service.IO
 {
     public class UniquePathCreator : IUniquePathCreator
     {

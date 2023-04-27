@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using SubtitleFileCleanerGUI.View;
 
-namespace SubtitleFileCleanerGUI.Service
+namespace SubtitleFileCleanerGUI.Service.Settings
 {
     public class SettingsWindowCreator : ISettingsWindowCreator
     {

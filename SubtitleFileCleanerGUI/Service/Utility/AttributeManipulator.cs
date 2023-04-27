@@ -2,11 +2,11 @@
 using System.Reflection;
 using System.Collections.Generic;
 
-namespace SubtitleFileCleanerGUI.Service
+namespace SubtitleFileCleanerGUI.Service.Utility
 {
     public class AttributeManipulator : IAttributeManipulator
     {
-        public IEnumerable<TAttribute> GetAttributes<TEnum, TAttribute>(TEnum enumValue) 
+        public IEnumerable<TAttribute> GetAttributes<TEnum, TAttribute>(TEnum enumValue)
             where TEnum : struct, Enum where TAttribute : Attribute
         {
             var enumType = typeof(TEnum);

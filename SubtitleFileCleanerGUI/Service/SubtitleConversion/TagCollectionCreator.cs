@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using SubtitleBytesClearFormatting.TagsGenerate;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Attributes;
+using SubtitleFileCleanerGUI.Service.Utility;
 
-namespace SubtitleFileCleanerGUI.Service
+namespace SubtitleFileCleanerGUI.Service.SubtitleConversion
 {
     public class TagCollectionCreator : ITagCollectionCreator
     {
