@@ -25,6 +25,7 @@ namespace SubtitleFileCleanerGUI
         {
             services.AddInputCommands();
             services.AddIO();
+            services.AddDialogs();
             services.AddUtilities();
             services.AddSettings();
             services.AddSubtitleConversion();

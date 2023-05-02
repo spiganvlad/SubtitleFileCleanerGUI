@@ -8,6 +8,9 @@ namespace SubtitleFileCleanerGUI.Attributes
     {
         public string TextInfo { get; private set; }
 
-        public StatusTextInfoAttribute(string textInfo) => TextInfo = textInfo;
+        public StatusTextInfoAttribute(string textInfo)
+        {
+            TextInfo = textInfo;
+        }
     }
 }

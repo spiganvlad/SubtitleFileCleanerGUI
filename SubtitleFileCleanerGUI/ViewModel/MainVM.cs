@@ -6,9 +6,9 @@ using System.Windows.Controls;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Ookii.Dialogs.Wpf;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service.Input;
+using SubtitleFileCleanerGUI.Service.Dialog;
 using SubtitleFileCleanerGUI.Service.Utility;
 using SubtitleFileCleanerGUI.Service.Settings;
 using SubtitleFileCleanerGUI.Service.SubtitleConversion;
@@ -20,6 +20,8 @@ namespace SubtitleFileCleanerGUI.ViewModel
         private readonly ISubtitleFileConverter fileConverter;
         private readonly IDefaultFileManipulator defaultFileManipulator;
         private readonly ISettingsWindowCreator settingsWindowCreator;
+        private readonly IOpenFileDialog fileDialog;
+        private readonly IOpenFolderDialog folderDialog;
 
         private readonly ICommand addFileCommand;
         private readonly ICommand removeFileCommand;
@@ -48,11 +50,13 @@ namespace SubtitleFileCleanerGUI.ViewModel
 
         public MainVM(ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator, IDefaultFileManipulator defaultFileManipulator,
             ISettingsWindowCreator settingsWindowCreator, IParameterlessCommandCreator parameterlessCommandCreator,
-            IParameterizedCommandCreator parameterizedCommandCreator)
+            IParameterizedCommandCreator parameterizedCommandCreator, IOpenFileDialog fileDialog, IOpenFolderDialog folderDialog)
         {
             this.fileConverter = fileConverter;
             this.defaultFileManipulator = defaultFileManipulator;
             this.settingsWindowCreator = settingsWindowCreator;
+            this.fileDialog = fileDialog;
+            this.folderDialog = folderDialog;
 
             Files = new ObservableCollection<SubtitleStatusFile>();
             Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
@@ -69,14 +73,20 @@ namespace SubtitleFileCleanerGUI.ViewModel
             openSettingsCommand = parameterlessCommandCreator.Create(OpenSettings);
         }
 
-        private void AddFile() =>
+        private void AddFile()
+        {
             Files.Add(defaultFileManipulator.GetDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom));
+        }
         
-        private void RemoveFile(SubtitleStatusFile file) =>
+        private void RemoveFile(SubtitleStatusFile file)
+        {
             Files.Remove(file);
+        }
         
-        private void RemoveAllFile() =>
+        private void RemoveAllFile()
+        {
             Files.Clear();
+        }
 
         private async Task ConvertFileAsync(SubtitleStatusFile file)
         {
@@ -101,24 +111,24 @@ namespace SubtitleFileCleanerGUI.ViewModel
 
         private void GetFileLocation(SubtitleFile file)
         {
-            VistaOpenFileDialog dialog = new();
-            bool? success = dialog.ShowDialog();
+            var success = fileDialog.ShowDialog(out string filePath);
 
-            if (success == true)
-                file.PathLocation = dialog.FileName;
+            if (success.Value)
+                file.PathLocation = filePath;
         }
 
         private void GetFileDestination(SubtitleFile file)
         {
-            VistaFolderBrowserDialog dialog = new();
-            bool? success = dialog.ShowDialog();
+            var success = folderDialog.ShowDialog(out string folderPath);
 
-            if (success == true)
-                file.PathDestination = dialog.SelectedPath;
+            if (success.Value)
+                file.PathDestination = folderPath;
         }
 
-        private void PreviewDragOver(DragEventArgs eventArgs) =>
+        private void PreviewDragOver(DragEventArgs eventArgs)
+        {
             eventArgs.Handled = true;
+        }
         
         private void DropFile(DragEventArgs eventArgs)
         {
@@ -187,7 +197,9 @@ namespace SubtitleFileCleanerGUI.ViewModel
             }
         }
 
-        public void OpenSettings() =>
+        public void OpenSettings()
+        {
             settingsWindowCreator.Create().Show();
+        }
     }
 }

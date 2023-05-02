@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SubtitleFileCleanerGUI.Service.IO;
 using SubtitleFileCleanerGUI.Service.Input;
+using SubtitleFileCleanerGUI.Service.Dialog;
 using SubtitleFileCleanerGUI.Service.Utility;
 using SubtitleFileCleanerGUI.Service.Settings;
 using SubtitleFileCleanerGUI.Service.SubtitleConversion;
@@ -21,6 +22,13 @@ namespace SubtitleFileCleanerGUI.Service
             return services
                 .AddTransient<IFileManipulator, FileManipulator>()
                 .AddTransient<IUniquePathCreator, UniquePathCreator>();
+        }
+
+        public static IServiceCollection AddDialogs(this IServiceCollection services)
+        {
+            return services
+                .AddTransient<IOpenFileDialog, OokiiOpenFileDialog>()
+                .AddTransient<IOpenFolderDialog, OokiiOpenFolderDialog>();
         }
 
         public static IServiceCollection AddUtilities(this IServiceCollection services)
