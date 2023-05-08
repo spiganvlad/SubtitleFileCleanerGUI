@@ -11,6 +11,7 @@ using SubtitleFileCleanerGUI.Service.Input;
 using SubtitleFileCleanerGUI.Service.Dialog;
 using SubtitleFileCleanerGUI.Service.Utility;
 using SubtitleFileCleanerGUI.Service.Settings;
+using SubtitleFileCleanerGUI.Service.ModelCreation;
 using SubtitleFileCleanerGUI.Service.SubtitleConversion;
 
 namespace SubtitleFileCleanerGUI.ViewModel
@@ -18,7 +19,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
     public class MainVM
     {
         private readonly ISubtitleFileConverter fileConverter;
-        private readonly IDefaultFileManipulator defaultFileManipulator;
+        private readonly ISubtitleStatusFileCreator fileCreator;
         private readonly ISettingsWindowCreator settingsWindowCreator;
         private readonly IOpenFileDialog fileDialog;
         private readonly IOpenFolderDialog folderDialog;
@@ -48,12 +49,12 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public ICommand DropFileCommand => dropFileCommand;
         public ICommand OpenSettingsCommand => openSettingsCommand;
 
-        public MainVM(ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator, IDefaultFileManipulator defaultFileManipulator,
+        public MainVM(ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator, ISubtitleStatusFileCreator fileCreator,
             ISettingsWindowCreator settingsWindowCreator, IParameterlessCommandCreator parameterlessCommandCreator,
             IParameterizedCommandCreator parameterizedCommandCreator, IOpenFileDialog fileDialog, IOpenFolderDialog folderDialog)
         {
             this.fileConverter = fileConverter;
-            this.defaultFileManipulator = defaultFileManipulator;
+            this.fileCreator = fileCreator;
             this.settingsWindowCreator = settingsWindowCreator;
             this.fileDialog = fileDialog;
             this.folderDialog = folderDialog;
@@ -75,7 +76,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
 
         private void AddFile()
         {
-            Files.Add(defaultFileManipulator.GetDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom));
+            Files.Add(fileCreator.Create());
         }
         
         private void RemoveFile(SubtitleStatusFile file)
@@ -92,14 +93,14 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             try
             {
-                file.StatusType = StatusTypes.ConvertingProcess;
-                await fileConverter.ConvertAsync(file);
-                file.StatusType = StatusTypes.CompletedProcess;
+                file.Status.StatusType = StatusTypes.ConvertingProcess;
+                await fileConverter.ConvertAsync(file.File);
+                file.Status.StatusType = StatusTypes.CompletedProcess;
             }
             catch (Exception e)
             {
-                file.StatusType = StatusTypes.FailedProcess;
-                file.TextInfo += "\n" + e.Message;
+                file.Status.StatusType = StatusTypes.FailedProcess;
+                file.Status.TextInfo += "\n" + e.Message;
             }
         }
 
@@ -191,8 +192,8 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             foreach (string filePath in filePaths)
             {
-                var file = defaultFileManipulator.GetDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom);
-                file.PathLocation = filePath;
+                var file = fileCreator.Create();
+                file.File.PathLocation = filePath;
                 Files.Add(file);
             }
         }

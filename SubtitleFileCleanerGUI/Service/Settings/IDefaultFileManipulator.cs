@@ -14,7 +14,7 @@ namespace SubtitleFileCleanerGUI.Service.Settings
 
     public interface IDefaultFileManipulator
     {
-        public T GetDefaultFile<T>(DefaultFileTypes fileType) where T : SubtitleFile, new();
+        public SubtitleFile GetDefaultFile(DefaultFileTypes fileType);
         public void SetDefaultFile(SubtitleFile file, DefaultFileTypes fileType);
     }
 }

@@ -17,9 +17,7 @@ namespace SubtitleFileCleanerGUI.Service.Settings
 
         public Window Create()
         {
-            var window = host.Services.GetService<SettingsWindow>() ??
-                throw new InvalidOperationException($"{nameof(SettingsWindow)} service was not found");
-            return window;
+            return host.Services.GetRequiredService<SettingsWindow>();
         }
     }
 }

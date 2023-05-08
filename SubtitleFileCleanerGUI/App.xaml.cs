@@ -28,6 +28,7 @@ namespace SubtitleFileCleanerGUI
             services.AddDialogs();
             services.AddUtilities();
             services.AddSettings();
+            services.AddModelCreation();
             services.AddSubtitleConversion();
             services.AddSingleton<MainVM>();
             services.AddSingleton<MainWindow>();

@@ -17,7 +17,7 @@ namespace SubtitleFileCleanerGUI.Service.Settings
             this.attributeManipulator = attributeManipulator;
         }
 
-        public T GetDefaultFile<T>(DefaultFileTypes fileType) where T : SubtitleFile, new()
+        public SubtitleFile GetDefaultFile(DefaultFileTypes fileType)
         {
             var attributes = attributeManipulator.GetAttributes<DefaultFileTypes, SinglePathAttribute>(fileType);
             var path = attributes.First().Path;
@@ -27,7 +27,7 @@ namespace SubtitleFileCleanerGUI.Service.Settings
             var deleteTags = configuration.GetValue<bool>($"{path}:DeleteTagsOption");
             var toOneLine = configuration.GetValue<bool>($"{path}:ToOneLineOption");
 
-            return new T { PathDestination = destinationPath, Cleaner = cleaner, DeleteTags = deleteTags, ToOneLine = toOneLine };
+            return new SubtitleFile { PathDestination = destinationPath, Cleaner = cleaner, DeleteTags = deleteTags, ToOneLine = toOneLine };
         }
 
         public void SetDefaultFile(SubtitleFile file, DefaultFileTypes fileTypes)

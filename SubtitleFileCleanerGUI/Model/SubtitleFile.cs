@@ -33,11 +33,11 @@ namespace SubtitleFileCleanerGUI.Model
 
     public class SubtitleFile : ObservableObject
     {
-            private string pathLocation;
-            private string pathDestination;
-            private SubtitleCleaners cleaner;
-            private bool deleteTags;
-            private bool toOneLine;
+        private string pathLocation;
+        private string pathDestination;
+        private SubtitleCleaners cleaner;
+        private bool deleteTags;
+        private bool toOneLine;
 
         public string PathLocation
         {

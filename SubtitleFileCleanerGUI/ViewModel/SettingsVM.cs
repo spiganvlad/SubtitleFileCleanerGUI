@@ -37,7 +37,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             this.defaultFileManipulator = defaultFileManipulator;
 
-            DefaultFile = defaultFileManipulator.GetDefaultFile<SubtitleFile>(DefaultFileTypes.Custom);
+            DefaultFile = defaultFileManipulator.GetDefaultFile(DefaultFileTypes.Custom);
             Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
 
             saveSettingsCommand = parameterlessCommandCreator.Create(SaveSettings);
@@ -51,6 +51,6 @@ namespace SubtitleFileCleanerGUI.ViewModel
         }
 
         private void RestoreSettings() =>
-            DefaultFile = defaultFileManipulator.GetDefaultFile<SubtitleFile>(DefaultFileTypes.Default);
+            DefaultFile = defaultFileManipulator.GetDefaultFile(DefaultFileTypes.Default);
     }
 }

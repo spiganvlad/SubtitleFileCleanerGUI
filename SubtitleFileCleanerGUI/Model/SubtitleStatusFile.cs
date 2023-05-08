@@ -1,73 +1,29 @@
-﻿using System.Linq;
-using SubtitleFileCleanerGUI.Service.Utility; //Remove after problem 'SetStatusMeta()' solved
-using SubtitleFileCleanerGUI.Attributes;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SubtitleFileCleanerGUI.Model
 {
-    // Supported status types
-    public enum StatusTypes
+    public class SubtitleStatusFile : ObservableObject
     {
-        [SinglePath("/Images/WaitingProcess.png")]
-        [StatusTextInfo("Waiting for a process to start")]
-        WaitingProcess,
-        [SinglePath("/Images/ConvertingProcess.png")]
-        [StatusTextInfo("The conversion has begun")]
-        ConvertingProcess,
-        [SinglePath("/Images/CompletedProcess.png")]
-        [StatusTextInfo("The conversion was successful")]
-        CompletedProcess,
-        [SinglePath("/Images/FailedProcess.png")]
-        [StatusTextInfo("An error has occurred")]
-        FailedProcess
-    }
+        private SubtitleFile file;
+        private StatusInfo status;
 
-    public class SubtitleStatusFile : SubtitleFile
-    {
-        private StatusTypes statusType;
-        private string imagePath;
-        private string textInfo;
-
-        public StatusTypes StatusType
+        public SubtitleFile File
         {
-            get => statusType;
+            get { return file; }
             set
             {
-                statusType = value;
-                SetStatusMeta();
+                file = value;
+                OnPropertyChanged(nameof(File));
             }
         }
-        public string ImagePath
+        public StatusInfo Status
         {
-            get => imagePath;
+            get { return status; }
             set
             {
-                imagePath = value;
-                OnPropertyChanged(nameof(ImagePath));
+                status = value;
+                OnPropertyChanged(nameof(Status));
             }
-        }
-        public string TextInfo
-        {
-            get => textInfo;
-            set
-            {
-                textInfo = value;
-                OnPropertyChanged(nameof(TextInfo));
-            }
-        }
-
-        public SubtitleStatusFile()
-        {
-            StatusType = StatusTypes.WaitingProcess;
-        }
-
-        //Redesign (but how?)
-        protected virtual void SetStatusMeta()
-        {
-            var pathAttributes = new AttributeManipulator().GetAttributes<StatusTypes, SinglePathAttribute>(StatusType);
-            ImagePath = pathAttributes.First().Path;
-
-            var textAttributes = new AttributeManipulator().GetAttributes<StatusTypes, StatusTextInfoAttribute>(StatusType);
-            TextInfo = textAttributes.First().TextInfo;
         }
     }
 }

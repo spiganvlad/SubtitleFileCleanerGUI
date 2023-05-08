@@ -4,6 +4,7 @@ using SubtitleFileCleanerGUI.Service.Input;
 using SubtitleFileCleanerGUI.Service.Dialog;
 using SubtitleFileCleanerGUI.Service.Utility;
 using SubtitleFileCleanerGUI.Service.Settings;
+using SubtitleFileCleanerGUI.Service.ModelCreation;
 using SubtitleFileCleanerGUI.Service.SubtitleConversion;
 
 namespace SubtitleFileCleanerGUI.Service
@@ -43,6 +44,13 @@ namespace SubtitleFileCleanerGUI.Service
             return services
                 .AddTransient<ISettingsWindowCreator, SettingsWindowCreator>()
                 .AddTransient<IDefaultFileManipulator, DefaultFilesManipulator>();
+        }
+
+        public static IServiceCollection AddModelCreation(this IServiceCollection services)
+        {
+            return services
+                .AddTransient<IStatusInfoWatcher, StatusInfoWatcher>()
+                .AddTransient<ISubtitleStatusFileCreator, SubtitleStatusFileCreator>();
         }
 
         public static IServiceCollection AddSubtitleConversion(this IServiceCollection services)

@@ -75,7 +75,7 @@
                 <DataGridTemplateColumn Width="0.08*" Header="Status">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Image ToolTip="{Binding TextInfo, UpdateSourceTrigger=PropertyChanged}" Source="{Binding ImagePath, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+								<Image ToolTip="{Binding Status.TextInfo, UpdateSourceTrigger=PropertyChanged}" Source="{Binding Status.ImagePath, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -89,9 +89,9 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBox Grid.Row="0" Text="{Binding PathLocation, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource RegularTextBox}"/>
+                                <TextBox Grid.Row="0" Text="{Binding File.PathLocation, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource RegularTextBox}"/>
                                 <Button Grid.Row="1" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
-                                    Path=DataContext.GetFileLocationCommand}" CommandParameter="{Binding SelectedItem, ElementName=MainDataGrid}"
+                                    Path=DataContext.GetFileLocationCommand}" CommandParameter="{Binding SelectedItem.File, ElementName=MainDataGrid}"
                                         Style="{StaticResource PathButton}">...</Button>
                             </Grid>
                         </DataTemplate>
@@ -107,9 +107,9 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
 
-                                <TextBox Grid.Row="0" Text="{Binding PathDestination, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource RegularTextBox}"/>
+                                <TextBox Grid.Row="0" Text="{Binding File.PathDestination, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource RegularTextBox}"/>
                                 <Button Grid.Row="1" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
-                                    Path=DataContext.GetFileDestinationCommand}" CommandParameter="{Binding SelectedItem, ElementName=MainDataGrid}"
+                                    Path=DataContext.GetFileDestinationCommand}" CommandParameter="{Binding SelectedItem.File, ElementName=MainDataGrid}"
                                         Style="{StaticResource PathButton}">...</Button>
                             </Grid>
                         </DataTemplate>
@@ -120,7 +120,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}},
-                                    Path=DataContext.Cleaners}" SelectedItem="{Binding Cleaner, UpdateSourceTrigger=PropertyChanged}" 
+                                    Path=DataContext.Cleaners}" SelectedItem="{Binding File.Cleaner, UpdateSourceTrigger=PropertyChanged}" 
                                       Style="{StaticResource ComboBoxBase}">
                             </ComboBox>
                         </DataTemplate>
@@ -130,7 +130,7 @@
                 <DataGridTemplateColumn Width="0.11*" Header="Delete tags">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding DeleteTags, UpdateSourceTrigger=PropertyChanged}"/>
+                            <CheckBox IsChecked="{Binding File.DeleteTags, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -138,7 +138,7 @@
                 <DataGridTemplateColumn Width="0.11*" Header="To one line">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox IsChecked="{Binding ToOneLine, UpdateSourceTrigger=PropertyChanged}"/>
+                            <CheckBox IsChecked="{Binding File.ToOneLine, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
