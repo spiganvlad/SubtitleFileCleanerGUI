@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Linq;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Controls;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using SubtitleFileCleanerGUI.Model;
-using SubtitleFileCleanerGUI.Service.Input;
 using SubtitleFileCleanerGUI.Service.Dialog;
-using SubtitleFileCleanerGUI.Service.Utility;
-using SubtitleFileCleanerGUI.Service.Settings;
+using SubtitleFileCleanerGUI.Service.Input;
 using SubtitleFileCleanerGUI.Service.ModelCreation;
+using SubtitleFileCleanerGUI.Service.Settings;
 using SubtitleFileCleanerGUI.Service.SubtitleConversion;
+using SubtitleFileCleanerGUI.Service.Utility;
 
 namespace SubtitleFileCleanerGUI.ViewModel
 {
@@ -50,8 +50,8 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public ICommand OpenSettingsCommand => openSettingsCommand;
 
         public MainVM(ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator, ISubtitleStatusFileCreator fileCreator,
-            ISettingsWindowCreator settingsWindowCreator, IParameterlessCommandCreator parameterlessCommandCreator,
-            IParameterizedCommandCreator parameterizedCommandCreator, IOpenFileDialog fileDialog, IOpenFolderDialog folderDialog)
+            ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator, IOpenFileDialog fileDialog,
+            IOpenFolderDialog folderDialog)
         {
             this.fileConverter = fileConverter;
             this.fileCreator = fileCreator;
@@ -62,16 +62,16 @@ namespace SubtitleFileCleanerGUI.ViewModel
             Files = new ObservableCollection<SubtitleStatusFile>();
             Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
 
-            addFileCommand = parameterlessCommandCreator.Create(AddFile);
-            removeFileCommand = parameterizedCommandCreator.Create<SubtitleStatusFile>(RemoveFile);
-            removeAllFileCommand = parameterlessCommandCreator.Create(RemoveAllFile);
-            convertFileCommand = parameterizedCommandCreator.Create<SubtitleStatusFile>(async file => await ConvertFileAsync(file));
-            convertAllFilesCommand = parameterlessCommandCreator.Create(async () => await ConvertAllFilesAsync());
-            getFileLocationCommand = parameterizedCommandCreator.Create<SubtitleFile>(GetFileLocation);
-            getFileDestinationCommand = parameterizedCommandCreator.Create<SubtitleFile>(GetFileDestination);
-            previewDragOverCommand = parameterizedCommandCreator.Create<DragEventArgs>(PreviewDragOver);
-            dropFileCommand = parameterizedCommandCreator.Create<DragEventArgs>(DropFile);
-            openSettingsCommand = parameterlessCommandCreator.Create(OpenSettings);
+            addFileCommand = commandCreator.Create(AddFile);
+            removeFileCommand = commandCreator.Create<SubtitleStatusFile>(RemoveFile);
+            removeAllFileCommand = commandCreator.Create(RemoveAllFile);
+            convertFileCommand = commandCreator.Create<SubtitleStatusFile>(async file => await ConvertFileAsync(file));
+            convertAllFilesCommand = commandCreator.Create(async () => await ConvertAllFilesAsync());
+            getFileLocationCommand = commandCreator.Create<SubtitleFile>(GetFileLocation);
+            getFileDestinationCommand = commandCreator.Create<SubtitleFile>(GetFileDestination);
+            previewDragOverCommand = commandCreator.Create<DragEventArgs>(PreviewDragOver);
+            dropFileCommand = commandCreator.Create<DragEventArgs>(DropFile);
+            openSettingsCommand = commandCreator.Create(OpenSettings);
         }
 
         private void AddFile()

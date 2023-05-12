@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Windows;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SubtitleFileCleanerGUI.View;
+using Microsoft.Extensions.Hosting;
 using SubtitleFileCleanerGUI.Service;
+using SubtitleFileCleanerGUI.View;
 using SubtitleFileCleanerGUI.ViewModel;
 
 namespace SubtitleFileCleanerGUI

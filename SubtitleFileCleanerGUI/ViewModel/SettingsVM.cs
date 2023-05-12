@@ -1,11 +1,11 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
-using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service.Input;
-using SubtitleFileCleanerGUI.Service.Utility;
 using SubtitleFileCleanerGUI.Service.Settings;
+using SubtitleFileCleanerGUI.Service.Utility;
 
 namespace SubtitleFileCleanerGUI.ViewModel
 {
@@ -33,15 +33,15 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public ICommand RestoreSettingsCommand => restoreSettingsCommand;
 
         public SettingsVM(IDefaultFileManipulator defaultFileManipulator, IEnumManipulator enumManipulator,
-            IParameterlessCommandCreator parameterlessCommandCreator)
+            ICommandCreator commandCreator)
         {
             this.defaultFileManipulator = defaultFileManipulator;
 
             DefaultFile = defaultFileManipulator.GetDefaultFile(DefaultFileTypes.Custom);
             Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
 
-            saveSettingsCommand = parameterlessCommandCreator.Create(SaveSettings);
-            restoreSettingsCommand = parameterlessCommandCreator.Create(RestoreSettings);
+            saveSettingsCommand = commandCreator.Create(SaveSettings);
+            restoreSettingsCommand = commandCreator.Create(RestoreSettings);
         }
 
         private void SaveSettings()

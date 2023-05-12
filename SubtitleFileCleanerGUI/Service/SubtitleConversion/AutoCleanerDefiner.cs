@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Attributes;
+using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service.Utility;
 
 namespace SubtitleFileCleanerGUI.Service.SubtitleConversion

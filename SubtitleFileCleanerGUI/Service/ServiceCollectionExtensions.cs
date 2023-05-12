@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SubtitleFileCleanerGUI.Service.IO;
-using SubtitleFileCleanerGUI.Service.Input;
 using SubtitleFileCleanerGUI.Service.Dialog;
-using SubtitleFileCleanerGUI.Service.Utility;
-using SubtitleFileCleanerGUI.Service.Settings;
+using SubtitleFileCleanerGUI.Service.Input;
+using SubtitleFileCleanerGUI.Service.IO;
 using SubtitleFileCleanerGUI.Service.ModelCreation;
+using SubtitleFileCleanerGUI.Service.Settings;
 using SubtitleFileCleanerGUI.Service.SubtitleConversion;
+using SubtitleFileCleanerGUI.Service.Utility;
 
 namespace SubtitleFileCleanerGUI.Service
 {
@@ -15,7 +15,8 @@ namespace SubtitleFileCleanerGUI.Service
         {
             return services
                 .AddTransient<IParameterizedCommandCreator, ParameterizedRelayCommandCreator>()
-                .AddTransient<IParameterlessCommandCreator, ParameterlessRelayCommandCreator>();
+                .AddTransient<IParameterlessCommandCreator, ParameterlessRelayCommandCreator>()
+                .AddTransient<ICommandCreator, RelayCommandCreator>();
         }
 
         public static IServiceCollection AddIO(this IServiceCollection services)
