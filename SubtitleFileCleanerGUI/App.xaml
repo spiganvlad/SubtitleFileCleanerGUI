@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:SubtitleFileCleanerGUI"
              xmlns:service ="clr-namespace:SubtitleFileCleanerGUI.Service"
              Startup="OnStartup"
+             Exit="OnAppExit"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <ResourceDictionary>

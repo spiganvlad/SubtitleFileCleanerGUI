@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using SubtitleFileCleanerGUI.Service.Dialog;
+using SubtitleFileCleanerGUI.Service.Extensions;
 using SubtitleFileCleanerGUI.Service.Input;
 using SubtitleFileCleanerGUI.Service.IO;
 using SubtitleFileCleanerGUI.Service.ModelCreation;
@@ -11,6 +14,19 @@ namespace SubtitleFileCleanerGUI.Service
 {
     public static class ServiceCollectionExtensions
     {
+        public static IServiceCollection AddSerilog(this IServiceCollection services)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.AppSettingsJson()
+                .CreateLogger();
+
+            return services.AddLogging(builder =>
+            {
+                builder.ClearProviders();
+                builder.AddSerilog(dispose: true);
+            });
+        }
+
         public static IServiceCollection AddInputCommands(this IServiceCollection services)
         {
             return services

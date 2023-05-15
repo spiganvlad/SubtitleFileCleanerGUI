@@ -3,6 +3,7 @@ using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using SubtitleFileCleanerGUI.Service;
 using SubtitleFileCleanerGUI.View;
 using SubtitleFileCleanerGUI.ViewModel;
@@ -23,6 +24,7 @@ namespace SubtitleFileCleanerGUI
 
         private void ConfigureServices(IServiceCollection services)
         {
+            services.AddSerilog();
             services.AddInputCommands();
             services.AddIO();
             services.AddDialogs();
@@ -48,13 +50,22 @@ namespace SubtitleFileCleanerGUI
             
             try
             {
+                Log.Information("Application Starting Up");
+
                 var mainWindow = services.GetRequiredService<MainWindow>();
                 mainWindow.Show();
             }
             catch (Exception ex)
             {
-                //Implement logging
+                Log.Fatal(ex, "Unable to start application");
+                Log.CloseAndFlush();
             }
+        }
+
+        private void OnAppExit(object sender, ExitEventArgs e)
+        {
+            Log.Information("Application closed successfully");
+            Log.CloseAndFlush();
         }
     }
 }

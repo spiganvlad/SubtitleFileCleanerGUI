@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service.Input;
 using SubtitleFileCleanerGUI.Service.Settings;
@@ -11,6 +12,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
 {
     public class SettingsVM : ObservableObject
     {
+        private readonly ILogger<SettingsVM> logger;
         private readonly IDefaultFileManipulator defaultFileManipulator;
 
         private readonly ICommand saveSettingsCommand;
@@ -32,9 +34,10 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public ICommand SaveSettingsCommand => saveSettingsCommand;
         public ICommand RestoreSettingsCommand => restoreSettingsCommand;
 
-        public SettingsVM(IDefaultFileManipulator defaultFileManipulator, IEnumManipulator enumManipulator,
-            ICommandCreator commandCreator)
+        public SettingsVM(ILogger<SettingsVM> logger, IDefaultFileManipulator defaultFileManipulator,
+            IEnumManipulator enumManipulator, ICommandCreator commandCreator)
         {
+            this.logger = logger;
             this.defaultFileManipulator = defaultFileManipulator;
 
             DefaultFile = defaultFileManipulator.GetDefaultFile(DefaultFileTypes.Custom);
@@ -47,10 +50,14 @@ namespace SubtitleFileCleanerGUI.ViewModel
         private void SaveSettings()
         {
             defaultFileManipulator.SetDefaultFile(DefaultFile, DefaultFileTypes.Custom);
+
+            logger.LogInformation("Settings saved successfully");
             MessageBox.Show("Settings saved successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void RestoreSettings() =>
+        private void RestoreSettings()
+        {
             DefaultFile = defaultFileManipulator.GetDefaultFile(DefaultFileTypes.Default);
+        }
     }
 }

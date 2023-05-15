@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Extensions.Logging;
 using SubtitleFileCleanerGUI.Model;
 using SubtitleFileCleanerGUI.Service.Dialog;
 using SubtitleFileCleanerGUI.Service.Input;
@@ -18,6 +20,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
 {
     public class MainVM
     {
+        private readonly ILogger<MainVM> logger;
         private readonly ISubtitleFileConverter fileConverter;
         private readonly ISubtitleStatusFileCreator fileCreator;
         private readonly ISettingsWindowCreator settingsWindowCreator;
@@ -49,10 +52,11 @@ namespace SubtitleFileCleanerGUI.ViewModel
         public ICommand DropFileCommand => dropFileCommand;
         public ICommand OpenSettingsCommand => openSettingsCommand;
 
-        public MainVM(ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator, ISubtitleStatusFileCreator fileCreator,
-            ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator, IOpenFileDialog fileDialog,
-            IOpenFolderDialog folderDialog)
+        public MainVM(ILogger<MainVM> logger, ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator,
+            ISubtitleStatusFileCreator fileCreator, ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator,
+            IOpenFileDialog fileDialog, IOpenFolderDialog folderDialog)
         {
+            this.logger = logger;
             this.fileConverter = fileConverter;
             this.fileCreator = fileCreator;
             this.settingsWindowCreator = settingsWindowCreator;
@@ -94,13 +98,18 @@ namespace SubtitleFileCleanerGUI.ViewModel
             try
             {
                 file.Status.StatusType = StatusTypes.ConvertingProcess;
+                logger.LogInformation("Start converting \"{fileName}\" file", Path.GetFileName(file.File.PathLocation));
+
                 await fileConverter.ConvertAsync(file.File);
+                
                 file.Status.StatusType = StatusTypes.CompletedProcess;
+                logger.LogInformation("\"{fileName}\" file conversion completed successfully", Path.GetFileName(file.File.PathLocation));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 file.Status.StatusType = StatusTypes.FailedProcess;
-                file.Status.TextInfo += "\n" + e.Message;
+                file.Status.TextInfo += "\n" + ex.Message;
+                logger.LogError(ex, "An error occurred while converting the \"{fileName}\" file", Path.GetFileName(file.File.PathLocation));
             }
         }
 
@@ -158,8 +167,10 @@ namespace SubtitleFileCleanerGUI.ViewModel
                 else
                     DropFileAddNew(files);
             }
-            catch
+            catch (Exception ex)
             {
+                logger.LogError(ex, "An error occurred while trying to drop the file(s). Source: {source}. " +
+                    "Original Source: {originalSource}", eventArgs.Source, eventArgs.OriginalSource);
                 MessageBox.Show("Unexpected error", "Unable to set the dropped file", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
