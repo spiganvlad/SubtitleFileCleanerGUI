@@ -3,12 +3,12 @@ using System.Windows.Input;
 
 namespace SubtitleFileCleanerGUI.Service.Input
 {
-    public class RelayCommandCreator : ICommandCreator
+    public class CommandCreator : ICommandCreator
     {
         private readonly IParameterlessCommandCreator parameterlessCommandCreator;
         private readonly IParameterizedCommandCreator parameterizedCommandCreator;
 
-        public RelayCommandCreator(IParameterlessCommandCreator parameterlessCommandCreator,
+        public CommandCreator(IParameterlessCommandCreator parameterlessCommandCreator,
             IParameterizedCommandCreator parameterizedCommandCreator)
         {
             this.parameterlessCommandCreator = parameterlessCommandCreator;

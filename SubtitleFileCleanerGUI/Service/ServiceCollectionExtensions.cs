@@ -32,7 +32,7 @@ namespace SubtitleFileCleanerGUI.Service
             return services
                 .AddTransient<IParameterizedCommandCreator, ParameterizedRelayCommandCreator>()
                 .AddTransient<IParameterlessCommandCreator, ParameterlessRelayCommandCreator>()
-                .AddTransient<ICommandCreator, RelayCommandCreator>();
+                .AddTransient<ICommandCreator, CommandCreator>();
         }
 
         public static IServiceCollection AddIO(this IServiceCollection services)
@@ -46,7 +46,8 @@ namespace SubtitleFileCleanerGUI.Service
         {
             return services
                 .AddTransient<IOpenFileDialog, OokiiOpenFileDialog>()
-                .AddTransient<IOpenFolderDialog, OokiiOpenFolderDialog>();
+                .AddTransient<IOpenFolderDialog, OokiiOpenFolderDialog>()
+                .AddTransient<IDialogOpener, DialogOpener>();
         }
 
         public static IServiceCollection AddUtilities(this IServiceCollection services)

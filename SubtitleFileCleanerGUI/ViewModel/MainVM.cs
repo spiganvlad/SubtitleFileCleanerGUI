@@ -24,8 +24,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
         private readonly ISubtitleFileConverter fileConverter;
         private readonly ISubtitleStatusFileCreator fileCreator;
         private readonly ISettingsWindowCreator settingsWindowCreator;
-        private readonly IOpenFileDialog fileDialog;
-        private readonly IOpenFolderDialog folderDialog;
+        private readonly IDialogOpener dialogOpener;
 
         private readonly ICommand addFileCommand;
         private readonly ICommand removeFileCommand;
@@ -54,14 +53,13 @@ namespace SubtitleFileCleanerGUI.ViewModel
 
         public MainVM(ILogger<MainVM> logger, ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator,
             ISubtitleStatusFileCreator fileCreator, ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator,
-            IOpenFileDialog fileDialog, IOpenFolderDialog folderDialog)
+            IDialogOpener dialogOpener)
         {
             this.logger = logger;
             this.fileConverter = fileConverter;
             this.fileCreator = fileCreator;
             this.settingsWindowCreator = settingsWindowCreator;
-            this.fileDialog = fileDialog;
-            this.folderDialog = folderDialog;
+            this.dialogOpener = dialogOpener;
 
             Files = new ObservableCollection<SubtitleStatusFile>();
             Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
@@ -121,7 +119,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
 
         private void GetFileLocation(SubtitleFile file)
         {
-            var success = fileDialog.ShowDialog(out string filePath);
+            var success = dialogOpener.ShowFileDialog(out string filePath);
 
             if (success.Value)
                 file.PathLocation = filePath;
@@ -129,7 +127,7 @@ namespace SubtitleFileCleanerGUI.ViewModel
 
         private void GetFileDestination(SubtitleFile file)
         {
-            var success = folderDialog.ShowDialog(out string folderPath);
+            var success = dialogOpener.ShowFolderDialog(out string folderPath);
 
             if (success.Value)
                 file.PathDestination = folderPath;
