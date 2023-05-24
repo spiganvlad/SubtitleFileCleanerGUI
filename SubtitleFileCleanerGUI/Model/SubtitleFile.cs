@@ -1,7 +1,37 @@
-﻿namespace SubtitleFileCleanerGUI.Model
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using SubtitleBytesClearFormatting.Cleaners;
+using SubtitleBytesClearFormatting.TagsGenerate;
+using SubtitleFileCleanerGUI.Attributes;
+
+namespace SubtitleFileCleanerGUI.Model
 {
-    public class SubtitleFile : NotifyPropertyChangedObject, ICloneableInstance<SubtitleFile>, ILocatable, IDislocatable, ICleanable,
-        IDeformatable, IMinifiable
+    // Supported subtitle cleaners
+    public enum SubtitleCleaners
+    {
+        Auto,
+        [SubtitleCleaner(typeof(SrtCleaner))]
+        [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
+        [SubtitleExtension(".srt")]
+        Srt,
+        [SubtitleCleaner(typeof(AssCleaner))]
+        [SubtitleTags(nameof(TagsCollectionGeneretor.GetAssSpecificTags))]
+        [SubtitleExtension(".ass")]
+        Ass,
+        [SubtitleCleaner(typeof(VttCleaner))]
+        [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
+        [SubtitleExtension(".vtt")]
+        Vtt,
+        [SubtitleCleaner(typeof(SbvCleaner))]
+        [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
+        [SubtitleExtension(".sbv")]
+        Sbv,
+        [SubtitleCleaner(typeof(SubCleaner))]
+        [SubtitleTags(nameof(TagsCollectionGeneretor.GetSubSpecificTags))]
+        [SubtitleExtension(".sub")]
+        Sub
+    }
+
+    public class SubtitleFile : ObservableObject
     {
         private string pathLocation;
         private string pathDestination;
@@ -15,7 +45,7 @@
             set
             {
                 pathLocation = value;
-                OnPropertyChanged("PathLocation");
+                OnPropertyChanged(nameof(PathLocation));
             }
         }
         public string PathDestination
@@ -24,7 +54,7 @@
             set
             {
                 pathDestination = value;
-                OnPropertyChanged("PathDestination");
+                OnPropertyChanged(nameof(PathDestination));
             }
         }
         public SubtitleCleaners Cleaner
@@ -33,7 +63,7 @@
             set
             {
                 cleaner = value;
-                OnPropertyChanged("Cleaner");
+                OnPropertyChanged(nameof(Cleaner));
             }
         }
         public bool DeleteTags
@@ -42,7 +72,7 @@
             set
             {
                 deleteTags = value;
-                OnPropertyChanged("DeleteTags");
+                OnPropertyChanged(nameof(DeleteTags));
             }
         }
         public bool ToOneLine
@@ -51,22 +81,8 @@
             set
             {
                 toOneLine = value;
-                OnPropertyChanged("ToOneLine");
+                OnPropertyChanged(nameof(ToOneLine));
             }
         }
-
-        public SubtitleFile() { }
-
-        public SubtitleFile Clone() => CloneTo<SubtitleFile>();
-
-        // The method allows you to clone an object to a derived base T
-        protected virtual T CloneTo<T>() where T : SubtitleFile, new() => new()
-        {
-            PathLocation = PathLocation,
-            PathDestination = PathDestination,
-            Cleaner = Cleaner,
-            DeleteTags = DeleteTags,
-            ToOneLine = ToOneLine
-        };
     }
 }

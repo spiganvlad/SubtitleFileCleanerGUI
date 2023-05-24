@@ -1,51 +1,63 @@
-﻿using System.Windows;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.Logging;
 using SubtitleFileCleanerGUI.Model;
-using SubtitleFileCleanerGUI.Service;
+using SubtitleFileCleanerGUI.Service.Input;
+using SubtitleFileCleanerGUI.Service.Settings;
+using SubtitleFileCleanerGUI.Service.Utility;
 
 namespace SubtitleFileCleanerGUI.ViewModel
 {
-    public class SettingsVM : NotifyPropertyChangedObject
+    public class SettingsVM : ObservableObject
     {
-        private readonly SubtitleFile mainDefaultFile;
-        private SubtitleFile defaultFile;
-        private RelayCommand saveSettingsCommand;
-        private RelayCommand restoreSettingsCommand;
+        private readonly ILogger<SettingsVM> logger;
+        private readonly IDefaultFileManipulator defaultFileManipulator;
 
-        public IEnumerable<SubtitleCleaners> Cleaners { get; private set; }
+        private readonly ICommand saveSettingsCommand;
+        private readonly ICommand restoreSettingsCommand;
+
+        private SubtitleFile defaultFile;
+
+        public IEnumerable<SubtitleCleaners> Cleaners { get; }
         public SubtitleFile DefaultFile
         { 
             get => defaultFile;
             private set
             {
                 defaultFile = value;
-                OnPropertyChanged("DefaultFile");
+                OnPropertyChanged(nameof(DefaultFile));
             }
         }
 
-        public RelayCommand SaveSettingsCommand => saveSettingsCommand ??= new RelayCommand(_ => SaveSettings());
-        public RelayCommand RestoreSettingsCommand => restoreSettingsCommand ??= new RelayCommand(_ => RestoreSettings());
+        public ICommand SaveSettingsCommand => saveSettingsCommand;
+        public ICommand RestoreSettingsCommand => restoreSettingsCommand;
 
-        public SettingsVM(SubtitleFile defaultFile)
+        public SettingsVM(ILogger<SettingsVM> logger, IDefaultFileManipulator defaultFileManipulator,
+            IEnumManipulator enumManipulator, ICommandCreator commandCreator)
         {
-            mainDefaultFile = defaultFile;
-            DefaultFile = DefaultFilesManipulator.LoadDefaultFile<SubtitleFile>(DefaultFileTypes.Custom);
-            Cleaners = EnumManipulator<SubtitleCleaners>.GetAllEnumValues();
+            this.logger = logger;
+            this.defaultFileManipulator = defaultFileManipulator;
+
+            DefaultFile = defaultFileManipulator.GetDefaultFile(DefaultFileTypes.Custom);
+            Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
+
+            saveSettingsCommand = commandCreator.Create(SaveSettings);
+            restoreSettingsCommand = commandCreator.Create(RestoreSettings);
         }
 
         private void SaveSettings()
         {
-            DefaultFilesManipulator.SaveDefaultFile(DefaultFile, DefaultFileTypes.Custom);
+            defaultFileManipulator.SetDefaultFile(DefaultFile, DefaultFileTypes.Custom);
 
-            mainDefaultFile.PathDestination = DefaultFile.PathDestination;
-            mainDefaultFile.Cleaner = DefaultFile.Cleaner;
-            mainDefaultFile.DeleteTags = DefaultFile.DeleteTags;
-            mainDefaultFile.ToOneLine = DefaultFile.ToOneLine;
-
+            logger.LogInformation("Settings saved successfully");
             MessageBox.Show("Settings saved successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void RestoreSettings() =>
-            DefaultFile = DefaultFilesManipulator.LoadDefaultFile<SubtitleFile>(DefaultFileTypes.Default);
+        private void RestoreSettings()
+        {
+            DefaultFile = defaultFileManipulator.GetDefaultFile(DefaultFileTypes.Default);
+        }
     }
 }

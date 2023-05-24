@@ -1,158 +1,179 @@
 ﻿using System;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Ookii.Dialogs.Wpf;
-using SubtitleFileCleanerGUI.View;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using Microsoft.Extensions.Logging;
 using SubtitleFileCleanerGUI.Model;
-using SubtitleFileCleanerGUI.Service;
+using SubtitleFileCleanerGUI.Service.Dialog;
+using SubtitleFileCleanerGUI.Service.Input;
+using SubtitleFileCleanerGUI.Service.ModelCreation;
+using SubtitleFileCleanerGUI.Service.Settings;
+using SubtitleFileCleanerGUI.Service.SubtitleConversion;
+using SubtitleFileCleanerGUI.Service.Utility;
 
 namespace SubtitleFileCleanerGUI.ViewModel
 {
     public class MainVM
     {
-        private RelayCommand addFileCommand;
-        private RelayCommand removeFileCommand;
-        private RelayCommand removeAllFileCommand;
-        private RelayCommand convertFileCommand;
-        private RelayCommand convertAllFilesCommand;
-        private RelayCommand getFileLocationCommand;
-        private RelayCommand getFileDestinationCommand;
-        private RelayCommand previewDragOverCommand;
-        private RelayCommand dropFileCommand;
-        private RelayCommand openSettingsCommand;
+        private readonly ILogger<MainVM> logger;
+        private readonly ISubtitleFileConverter fileConverter;
+        private readonly ISubtitleStatusFileCreator fileCreator;
+        private readonly ISettingsWindowCreator settingsWindowCreator;
+        private readonly IDialogOpener dialogOpener;
+
+        private readonly ICommand addFileCommand;
+        private readonly ICommand removeFileCommand;
+        private readonly ICommand removeAllFileCommand;
+        private readonly ICommand convertFileCommand;
+        private readonly ICommand convertAllFilesCommand;
+        private readonly ICommand getFileLocationCommand;
+        private readonly ICommand getFileDestinationCommand;
+        private readonly ICommand previewDragOverCommand;
+        private readonly ICommand dropFileCommand;
+        private readonly ICommand openSettingsCommand;
 
         public ObservableCollection<SubtitleStatusFile> Files { get; }
         public IEnumerable<SubtitleCleaners> Cleaners { get; }
-        private SubtitleStatusFile DefaultFile { get; }
-        private Window SettingsWindow { get; set; }
 
-        public RelayCommand AddFileCommand => addFileCommand ??= new RelayCommand(_ => AddFile());
-        public RelayCommand RemoveFileCommand => removeFileCommand ??= new RelayCommand(item => RemoveFile(item));
-        public RelayCommand RemoveAllFileCommand => removeAllFileCommand ??= new RelayCommand(_ => RemoveAllFile());
-        public RelayCommand ConvertFileCommand => convertFileCommand ??= new RelayCommand(item => ConvertFile(item));
-        public RelayCommand ConvertAllFilesCommand => convertAllFilesCommand ??= new RelayCommand(_ => ConvertAllFiles());
-        public RelayCommand GetFileLocationCommand => getFileLocationCommand ??= new RelayCommand(item => GetFileLocation(item));
-        public RelayCommand GetFileDestinationCommand => getFileDestinationCommand ??= new RelayCommand(item => GetFileDestination(item));
-        public RelayCommand PreviewDragOverCommand => previewDragOverCommand ??= new RelayCommand(item => PreviewDragOver(item));
-        public RelayCommand DropFileCommand => dropFileCommand ??= new RelayCommand(item => DropFile(item));
-        public RelayCommand OpenSettingsCommand => openSettingsCommand ??= new RelayCommand(_ => OpenSettings());
+        public ICommand AddFileCommand => addFileCommand;
+        public ICommand RemoveFileCommand => removeFileCommand;
+        public ICommand RemoveAllFileCommand => removeAllFileCommand;
+        public ICommand ConvertFileCommand => convertFileCommand;
+        public ICommand ConvertAllFilesCommand => convertAllFilesCommand;
+        public ICommand GetFileLocationCommand => getFileLocationCommand;
+        public ICommand GetFileDestinationCommand => getFileDestinationCommand;
+        public ICommand PreviewDragOverCommand => previewDragOverCommand;
+        public ICommand DropFileCommand => dropFileCommand;
+        public ICommand OpenSettingsCommand => openSettingsCommand;
 
-        public MainVM()
+        public MainVM(ILogger<MainVM> logger, ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator,
+            ISubtitleStatusFileCreator fileCreator, ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator,
+            IDialogOpener dialogOpener)
         {
+            this.logger = logger;
+            this.fileConverter = fileConverter;
+            this.fileCreator = fileCreator;
+            this.settingsWindowCreator = settingsWindowCreator;
+            this.dialogOpener = dialogOpener;
+
             Files = new ObservableCollection<SubtitleStatusFile>();
-            Cleaners = EnumManipulator<SubtitleCleaners>.GetAllEnumValues();
-            DefaultFile = DefaultFilesManipulator.LoadDefaultFile<SubtitleStatusFile>(DefaultFileTypes.Custom);
-            SettingsWindow = new SettingsWindow(DefaultFile);
+            Cleaners = enumManipulator.GetAllEnumValues<SubtitleCleaners>();
+
+            addFileCommand = commandCreator.Create(AddFile);
+            removeFileCommand = commandCreator.Create<SubtitleStatusFile>(RemoveFile);
+            removeAllFileCommand = commandCreator.Create(RemoveAllFile);
+            convertFileCommand = commandCreator.Create<SubtitleStatusFile>(async file => await ConvertFileAsync(file));
+            convertAllFilesCommand = commandCreator.Create(async () => await ConvertAllFilesAsync());
+            getFileLocationCommand = commandCreator.Create<SubtitleFile>(GetFileLocation);
+            getFileDestinationCommand = commandCreator.Create<SubtitleFile>(GetFileDestination);
+            previewDragOverCommand = commandCreator.Create<DragEventArgs>(PreviewDragOver);
+            dropFileCommand = commandCreator.Create<DragEventArgs>(DropFile);
+            openSettingsCommand = commandCreator.Create(OpenSettings);
         }
 
-        private void AddFile() => Files.Add(DefaultFile.Clone());
-
-        private void RemoveFile(object item)
+        private void AddFile()
         {
-            if (item != null)
-                Files.Remove((SubtitleStatusFile)item);
+            Files.Add(fileCreator.Create());
         }
-
-        private void RemoveAllFile() => Files.Clear();
-
-        private void ConvertFile(object item)
+        
+        private void RemoveFile(SubtitleStatusFile file)
         {
-            if (item is SubtitleStatusFile file)
-                Task.Run(async () => await ConvertFileAsync(file));
+            Files.Remove(file);
         }
-
-        private void ConvertAllFiles()
+        
+        private void RemoveAllFile()
         {
-            foreach (SubtitleStatusFile file in Files)
-                Task.Run(async () => await ConvertFileAsync(file));
+            Files.Clear();
         }
 
         private async Task ConvertFileAsync(SubtitleStatusFile file)
         {
             try
             {
-                file.StatusType = StatusTypes.ConvertingProcess;
-                await SubtitleFileConverter.ConvertFileAsync(file);
-                file.StatusType = StatusTypes.CompletedProcess;
+                file.Status.StatusType = StatusTypes.ConvertingProcess;
+                logger.LogInformation("Start converting \"{fileName}\" file", Path.GetFileName(file.File.PathLocation));
+
+                await fileConverter.ConvertAsync(file.File);
+                
+                file.Status.StatusType = StatusTypes.CompletedProcess;
+                logger.LogInformation("\"{fileName}\" file conversion completed successfully", Path.GetFileName(file.File.PathLocation));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                file.StatusType = StatusTypes.FailedProcess;
-                file.TextInfo += "\n" + e.Message;
+                file.Status.StatusType = StatusTypes.FailedProcess;
+                file.Status.TextInfo += "\n" + ex.Message;
+                logger.LogError(ex, "An error occurred while converting the \"{fileName}\" file", Path.GetFileName(file.File.PathLocation));
             }
         }
 
-        private void GetFileLocation(object item)
+        private async Task ConvertAllFilesAsync()
         {
-            if (item is SubtitleFile file)
-            {
-                VistaOpenFileDialog dialog = new();
-                bool? success = dialog.ShowDialog();
-
-                if (success == true)
-                    file.PathLocation = dialog.FileName;
-            }
+            foreach (var file in Files)
+                await ConvertFileAsync(file);
         }
 
-        private void GetFileDestination(object item)
+        private void GetFileLocation(SubtitleFile file)
         {
-            if (item is SubtitleFile file)
-            {
-                VistaFolderBrowserDialog dialog = new();
-                bool? success = dialog.ShowDialog();
+            var success = dialogOpener.ShowFileDialog(out string filePath);
 
-                if (success == true)
-                    file.PathDestination = dialog.SelectedPath;
-            }
+            if (success.Value)
+                file.PathLocation = filePath;
         }
 
-        private void PreviewDragOver(object item)
+        private void GetFileDestination(SubtitleFile file)
         {
-            if (item is DragEventArgs eventArgs)
-                eventArgs.Handled = true;
+            var success = dialogOpener.ShowFolderDialog(out string folderPath);
+
+            if (success.Value)
+                file.PathDestination = folderPath;
         }
 
-        private void DropFile(object item)
+        private void PreviewDragOver(DragEventArgs eventArgs)
+        {
+            eventArgs.Handled = true;
+        }
+        
+        private void DropFile(DragEventArgs eventArgs)
         {
             try
             {
-                if (item is DragEventArgs eventArgs)
+                string[] files;
+                if (eventArgs.Data.GetDataPresent(DataFormats.FileDrop))
+                    files = (string[])eventArgs.Data.GetData(DataFormats.FileDrop);
+                else
+                    return;
+
+                // Define where the file was dropped
+                if (eventArgs.OriginalSource is Border border && border.TemplatedParent is Button button)
                 {
-                    string[] files;
-                    if (eventArgs.Data.GetDataPresent(DataFormats.FileDrop))
-                        files = (string[])eventArgs.Data.GetData(DataFormats.FileDrop);
-                    else
-                        return;
-
-                    // Define where the file was dropped
-                    if (eventArgs.OriginalSource is Border border && border.TemplatedParent is Button button)
-                    {
-                        DropFileFromButton(button, files);
-                        return;
-                    }
-
-                    Type type = eventArgs.OriginalSource.GetType();
-                    if ("TextBoxView" == type.Name)
-                    {
-                        if (type.GetProperty("Parent").GetValue(eventArgs.OriginalSource, null) is ScrollViewer scroll &&
-                            scroll.TemplatedParent is TextBox textBox)
-                            DropFileSetPath(textBox, files);
-                    }
-                    else
-                        DropFileAddNew(files);
+                    DropFileFromButton(button, files);
+                    return;
                 }
+
+                Type type = eventArgs.OriginalSource.GetType();
+                if ("TextBoxView" == type.Name)
+                {
+                    if (type.GetProperty("Parent").GetValue(eventArgs.OriginalSource, null) is ScrollViewer scroll &&
+                        scroll.TemplatedParent is TextBox textBox)
+                        DropFileSetPath(textBox, files);
+                }
+                else
+                    DropFileAddNew(files);
             }
-            catch
+            catch (Exception ex)
             {
+                logger.LogError(ex, "An error occurred while trying to drop the file(s). Source: {source}. " +
+                    "Original Source: {originalSource}", eventArgs.Source, eventArgs.OriginalSource);
                 MessageBox.Show("Unexpected error", "Unable to set the dropped file", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        // Search parant grid 
+        // Search parent grid 
         private void DropFileFromButton(Button button, string[] filePaths)
         {
             if (button.Parent is Grid grid)
@@ -180,21 +201,15 @@ namespace SubtitleFileCleanerGUI.ViewModel
         {
             foreach (string filePath in filePaths)
             {
-                SubtitleStatusFile file = DefaultFile.Clone();
-                file.PathLocation = filePath;
+                var file = fileCreator.Create();
+                file.File.PathLocation = filePath;
                 Files.Add(file);
             }
         }
 
         public void OpenSettings()
         {
-            if (SettingsWindow.IsLoaded)
-                SettingsWindow.Focus();
-            else
-            {
-                SettingsWindow = new SettingsWindow(DefaultFile);
-                SettingsWindow.Show();
-            }
+            settingsWindowCreator.Create().Show();
         }
     }
 }

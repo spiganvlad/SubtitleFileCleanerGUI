@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using SubtitleFileCleanerGUI.Model;
-using SubtitleFileCleanerGUI.ViewModel;
+﻿using SubtitleFileCleanerGUI.ViewModel;
 
 namespace SubtitleFileCleanerGUI.View
 {
@@ -9,10 +7,10 @@ namespace SubtitleFileCleanerGUI.View
     /// </summary>
     public partial class SettingsWindow : WindowApplicationBase
     {
-        public SettingsWindow(SubtitleFile defaultFile)
+        public SettingsWindow(SettingsVM dataContext)
         {
             InitializeComponent();
-            DataContext = new SettingsVM(defaultFile);
+            DataContext = dataContext;
         }
     }
 }

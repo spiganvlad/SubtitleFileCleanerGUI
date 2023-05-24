@@ -1,71 +1,29 @@
-﻿using System.Linq;
-using SubtitleFileCleanerGUI.Service;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SubtitleFileCleanerGUI.Model
 {
-    // Supported status types
-    public enum StatusTypes
+    public class SubtitleStatusFile : ObservableObject
     {
-        [SinglePath("/Images/WaitingProcess.png")]
-        [StatusTextInfo("Waiting for a process to start")]
-        WaitingProcess,
-        [SinglePath("/Images/ConvertingProcess.png")]
-        [StatusTextInfo("The conversion has begun")]
-        ConvertingProcess,
-        [SinglePath("/Images/CompletedProcess.png")]
-        [StatusTextInfo("The conversion was successful")]
-        CompletedProcess,
-        [SinglePath("/Images/FailedProcess.png")]
-        [StatusTextInfo("An error has occurred")]
-        FailedProcess
-    }
+        private SubtitleFile file;
+        private StatusInfo status;
 
-    public class SubtitleStatusFile : SubtitleFile, ICloneableInstance<SubtitleStatusFile>, IViewableStatus
-    {
-        private StatusTypes statusType;
-        private string imagePath;
-        private string textInfo;
-
-        public StatusTypes StatusType
+        public SubtitleFile File
         {
-            get => statusType;
+            get { return file; }
             set
             {
-                statusType = value;
-                SetStatusMeta();
+                file = value;
+                OnPropertyChanged(nameof(File));
             }
         }
-        public string ImagePath
+        public StatusInfo Status
         {
-            get => imagePath;
+            get { return status; }
             set
             {
-                imagePath = value;
-                OnPropertyChanged("ImagePath");
+                status = value;
+                OnPropertyChanged(nameof(Status));
             }
         }
-        public string TextInfo
-        {
-            get => textInfo;
-            set
-            {
-                textInfo = value;
-                OnPropertyChanged("TextInfo");
-            }
-        }
-
-        public SubtitleStatusFile() => StatusType = StatusTypes.WaitingProcess;
-        public SubtitleStatusFile(StatusTypes statusType) => StatusType = statusType;
-
-        protected virtual void SetStatusMeta()
-        {
-            var pathAttributes = EnumManipulator<StatusTypes>.GetEnumAttributes<SinglePathAttribute>(StatusType);
-            ImagePath = pathAttributes.First().Path;
-
-            var textAttributes = EnumManipulator<StatusTypes>.GetEnumAttributes<StatusTextInfoAttribute>(StatusType);
-            TextInfo = textAttributes.First().TextInfo;
-        }
-
-        public new SubtitleStatusFile Clone() => CloneTo<SubtitleStatusFile>();
     }
 }
