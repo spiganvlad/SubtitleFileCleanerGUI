@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33626.354
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleFileCleanerGUI", "SubtitleFileCleanerGUI\SubtitleFileCleanerGUI.csproj", "{9A9204CE-6BA4-4C96-B485-6AE7D640C104}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleFileCleanerGUI", "src\SubtitleFileCleanerGUI\SubtitleFileCleanerGUI.csproj", "{9A9204CE-6BA4-4C96-B485-6AE7D640C104}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3D94CF65-191B-4C85-A8CB-1584AE7EB283}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,6 +20,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9A9204CE-6BA4-4C96-B485-6AE7D640C104} = {3D94CF65-191B-4C85-A8CB-1584AE7EB283}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BFD64AC1-F1E1-4E0B-ADDF-2C746C4AD5DB}
