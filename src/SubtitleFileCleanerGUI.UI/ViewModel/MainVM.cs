@@ -16,7 +16,7 @@ using SubtitleFileCleanerGUI.Service.Settings;
 using SubtitleFileCleanerGUI.Service.SubtitleConversion;
 using SubtitleFileCleanerGUI.Service.Utility;
 
-namespace SubtitleFileCleanerGUI.ViewModel
+namespace SubtitleFileCleanerGUI.UI.ViewModel
 {
     public class MainVM
     {

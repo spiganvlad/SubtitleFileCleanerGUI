@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace SubtitleFileCleanerGUI.View
+namespace SubtitleFileCleanerGUI.UI.View
 {
     // The main class for all windows that will have a changed title bar
     public class WindowApplicationBase : Window

@@ -8,7 +8,7 @@ using SubtitleFileCleanerGUI.Service.Input;
 using SubtitleFileCleanerGUI.Service.Settings;
 using SubtitleFileCleanerGUI.Service.Utility;
 
-namespace SubtitleFileCleanerGUI.ViewModel
+namespace SubtitleFileCleanerGUI.UI.ViewModel
 {
     public class SettingsVM : ObservableObject
     {

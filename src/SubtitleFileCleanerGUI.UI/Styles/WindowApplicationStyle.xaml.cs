@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SubtitleFileCleanerGUI.Styles
+namespace SubtitleFileCleanerGUI.UI.Styles
 {
     public partial class WindowApplicationStyle : ResourceDictionary
     {

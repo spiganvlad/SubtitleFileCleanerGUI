@@ -1,6 +1,6 @@
-﻿using SubtitleFileCleanerGUI.ViewModel;
+﻿using SubtitleFileCleanerGUI.UI.ViewModel;
 
-namespace SubtitleFileCleanerGUI.View
+namespace SubtitleFileCleanerGUI.UI.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

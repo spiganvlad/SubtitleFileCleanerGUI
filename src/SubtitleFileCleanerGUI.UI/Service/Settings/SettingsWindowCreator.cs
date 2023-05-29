@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SubtitleFileCleanerGUI.View;
+using SubtitleFileCleanerGUI.UI.View; //Fix Application to UI dependency
 
 namespace SubtitleFileCleanerGUI.Service.Settings
 {
