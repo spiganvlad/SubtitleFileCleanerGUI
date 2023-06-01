@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace SubtitleFileCleanerGUI.Model
+namespace SubtitleFileCleanerGUI.Domain.Model
 {
     public class SubtitleStatusFile : ObservableObject
     {

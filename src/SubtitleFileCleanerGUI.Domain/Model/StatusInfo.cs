@@ -1,25 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SubtitleFileCleanerGUI.Attributes;
+using SubtitleFileCleanerGUI.Domain.Enums;
 
-namespace SubtitleFileCleanerGUI.Model
+namespace SubtitleFileCleanerGUI.Domain.Model
 {
-    // Supported status types
-    public enum StatusTypes
-    {
-        [SinglePath("/Images/WaitingProcess.png")]
-        [StatusTextInfo("Waiting for a process to start")]
-        WaitingProcess,
-        [SinglePath("/Images/ConvertingProcess.png")]
-        [StatusTextInfo("The conversion has begun")]
-        ConvertingProcess,
-        [SinglePath("/Images/CompletedProcess.png")]
-        [StatusTextInfo("The conversion was successful")]
-        CompletedProcess,
-        [SinglePath("/Images/FailedProcess.png")]
-        [StatusTextInfo("An error has occurred")]
-        FailedProcess
-    }
-
     public class StatusInfo : ObservableObject
     {
         private StatusTypes statusType;

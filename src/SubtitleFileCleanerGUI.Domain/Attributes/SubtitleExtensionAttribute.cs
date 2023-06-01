@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SubtitleFileCleanerGUI.Attributes
+namespace SubtitleFileCleanerGUI.Domain.Attributes
 {
     // Stores metadata about subtitle file extensions
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]

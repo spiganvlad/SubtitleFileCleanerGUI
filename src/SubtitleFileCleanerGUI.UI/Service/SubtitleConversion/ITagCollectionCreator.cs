@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using SubtitleBytesClearFormatting.TagsGenerate;
-using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Domain.Enums;
 
 namespace SubtitleFileCleanerGUI.Service.SubtitleConversion
 {

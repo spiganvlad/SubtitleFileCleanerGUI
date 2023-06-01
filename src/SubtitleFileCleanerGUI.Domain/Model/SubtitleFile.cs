@@ -1,36 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using SubtitleBytesClearFormatting.Cleaners;
-using SubtitleBytesClearFormatting.TagsGenerate;
-using SubtitleFileCleanerGUI.Attributes;
+using SubtitleFileCleanerGUI.Domain.Enums;
 
-namespace SubtitleFileCleanerGUI.Model
+namespace SubtitleFileCleanerGUI.Domain.Model
 {
-    // Supported subtitle cleaners
-    public enum SubtitleCleaners
-    {
-        Auto,
-        [SubtitleCleaner(typeof(SrtCleaner))]
-        [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
-        [SubtitleExtension(".srt")]
-        Srt,
-        [SubtitleCleaner(typeof(AssCleaner))]
-        [SubtitleTags(nameof(TagsCollectionGeneretor.GetAssSpecificTags))]
-        [SubtitleExtension(".ass")]
-        Ass,
-        [SubtitleCleaner(typeof(VttCleaner))]
-        [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
-        [SubtitleExtension(".vtt")]
-        Vtt,
-        [SubtitleCleaner(typeof(SbvCleaner))]
-        [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
-        [SubtitleExtension(".sbv")]
-        Sbv,
-        [SubtitleCleaner(typeof(SubCleaner))]
-        [SubtitleTags(nameof(TagsCollectionGeneretor.GetSubSpecificTags))]
-        [SubtitleExtension(".sub")]
-        Sub
-    }
-
     public class SubtitleFile : ObservableObject
     {
         private string pathLocation;

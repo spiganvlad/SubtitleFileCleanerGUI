@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3D94CF65-191
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleFileCleanerGUI.UI", "src\SubtitleFileCleanerGUI.UI\SubtitleFileCleanerGUI.UI.csproj", "{72BE77F9-A673-4B1C-8B43-30087B456617}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubtitleFileCleanerGUI.Domain", "src\SubtitleFileCleanerGUI.Domain\SubtitleFileCleanerGUI.Domain.csproj", "{075936B0-A475-473F-83D5-333560EF0321}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +19,17 @@ Global
 		{72BE77F9-A673-4B1C-8B43-30087B456617}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72BE77F9-A673-4B1C-8B43-30087B456617}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72BE77F9-A673-4B1C-8B43-30087B456617}.Release|Any CPU.Build.0 = Release|Any CPU
+		{075936B0-A475-473F-83D5-333560EF0321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{075936B0-A475-473F-83D5-333560EF0321}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{075936B0-A475-473F-83D5-333560EF0321}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{075936B0-A475-473F-83D5-333560EF0321}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{72BE77F9-A673-4B1C-8B43-30087B456617} = {3D94CF65-191B-4C85-A8CB-1584AE7EB283}
+		{075936B0-A475-473F-83D5-333560EF0321} = {3D94CF65-191B-4C85-A8CB-1584AE7EB283}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BFD64AC1-F1E1-4E0B-ADDF-2C746C4AD5DB}

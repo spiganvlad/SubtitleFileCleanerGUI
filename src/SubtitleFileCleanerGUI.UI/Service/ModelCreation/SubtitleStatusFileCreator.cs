@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Domain.Enums;
+using SubtitleFileCleanerGUI.Domain.Model;
 using SubtitleFileCleanerGUI.Service.Settings;
 
 namespace SubtitleFileCleanerGUI.Service.ModelCreation

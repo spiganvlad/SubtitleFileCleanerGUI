@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SubtitleBytesClearFormatting.TagsGenerate;
 
-namespace SubtitleFileCleanerGUI.Attributes
+namespace SubtitleFileCleanerGUI.Domain.Attributes
 {
     // Stores metadata about the method for getting tags
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]

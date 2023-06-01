@@ -1,4 +1,4 @@
-﻿using SubtitleFileCleanerGUI.Model;
+﻿using SubtitleFileCleanerGUI.Domain.Model;
 
 namespace SubtitleFileCleanerGUI.Service.ModelCreation
 {

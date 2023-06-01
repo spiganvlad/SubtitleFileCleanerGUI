@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using Microsoft.Extensions.Configuration;
-using SubtitleFileCleanerGUI.Attributes;
-using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Domain.Attributes;
+using SubtitleFileCleanerGUI.Domain.Enums;
+using SubtitleFileCleanerGUI.Domain.Model;
 using SubtitleFileCleanerGUI.Service.Utility;
 
 namespace SubtitleFileCleanerGUI.Service.Settings

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SubtitleBytesClearFormatting.TagsGenerate;
-using SubtitleFileCleanerGUI.Attributes;
-using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Domain.Attributes;
+using SubtitleFileCleanerGUI.Domain.Enums;
 using SubtitleFileCleanerGUI.Service.Utility;
 
 namespace SubtitleFileCleanerGUI.Service.SubtitleConversion

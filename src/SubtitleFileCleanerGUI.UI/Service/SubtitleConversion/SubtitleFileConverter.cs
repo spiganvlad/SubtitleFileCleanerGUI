@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using SubtitleBytesClearFormatting.Cleaners;
-using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Domain.Enums;
+using SubtitleFileCleanerGUI.Domain.Model;
 using SubtitleFileCleanerGUI.Service.IO;
 
 namespace SubtitleFileCleanerGUI.Service.SubtitleConversion

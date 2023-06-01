@@ -1,5 +1,5 @@
 ﻿using SubtitleBytesClearFormatting.Cleaners;
-using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Domain.Enums;
 
 namespace SubtitleFileCleanerGUI.Service.SubtitleConversion
 {

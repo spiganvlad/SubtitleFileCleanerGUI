@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SubtitleFileCleanerGUI.Attributes
+namespace SubtitleFileCleanerGUI.Domain.Attributes
 {
     // Stores metadata about the status type description
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]

@@ -1,5 +1,5 @@
-﻿using SubtitleFileCleanerGUI.Attributes;
-using SubtitleFileCleanerGUI.Model;
+﻿using SubtitleFileCleanerGUI.Domain.Attributes;
+using SubtitleFileCleanerGUI.Domain.Model;
 
 namespace SubtitleFileCleanerGUI.Service.Settings
 {

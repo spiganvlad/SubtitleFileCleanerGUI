@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using SubtitleFileCleanerGUI.Model;
+using SubtitleFileCleanerGUI.Domain.Model;
 
 namespace SubtitleFileCleanerGUI.Service.SubtitleConversion
 {
