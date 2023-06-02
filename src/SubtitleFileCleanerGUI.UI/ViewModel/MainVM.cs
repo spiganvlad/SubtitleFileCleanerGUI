@@ -8,14 +8,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Extensions.Logging;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.Dialog;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.Input;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.ModelCreation;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.Settings;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.SubtitleConversion;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.Utility;
 using SubtitleFileCleanerGUI.Domain.Enums;
 using SubtitleFileCleanerGUI.Domain.Model;
-using SubtitleFileCleanerGUI.Service.Dialog;
-using SubtitleFileCleanerGUI.Service.Input;
-using SubtitleFileCleanerGUI.Service.ModelCreation;
-using SubtitleFileCleanerGUI.Service.Settings;
-using SubtitleFileCleanerGUI.Service.SubtitleConversion;
-using SubtitleFileCleanerGUI.Service.Utility;
 
 namespace SubtitleFileCleanerGUI.UI.ViewModel
 {

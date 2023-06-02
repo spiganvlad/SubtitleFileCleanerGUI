@@ -3,11 +3,12 @@ using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
+using SubtitleFileCleanerGUI.Application.Abstractions.Enums;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.Input;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.Settings;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.Utility;
 using SubtitleFileCleanerGUI.Domain.Enums;
 using SubtitleFileCleanerGUI.Domain.Model;
-using SubtitleFileCleanerGUI.Service.Input;
-using SubtitleFileCleanerGUI.Service.Settings;
-using SubtitleFileCleanerGUI.Service.Utility;
 
 namespace SubtitleFileCleanerGUI.UI.ViewModel
 {

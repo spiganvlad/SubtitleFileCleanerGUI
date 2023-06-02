@@ -21,6 +21,8 @@
   <ItemGroup>
     <Resource Include="Images\**" />
     <Resource Include="Fonts\**" />
+    <ProjectReference Include="..\SubtitleFileCleanerGUI.Application.Abstractions\SubtitleFileCleanerGUI.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\SubtitleFileCleanerGUI.Application\SubtitleFileCleanerGUI.Application.csproj" />
     <ProjectReference Include="..\SubtitleFileCleanerGUI.Domain\SubtitleFileCleanerGUI.Domain.csproj" />
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

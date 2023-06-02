@@ -4,13 +4,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using SubtitleFileCleanerGUI.Service;
+using SubtitleFileCleanerGUI.UI.Registers;
 using SubtitleFileCleanerGUI.UI.View;
 using SubtitleFileCleanerGUI.UI.ViewModel;
 
 namespace SubtitleFileCleanerGUI.UI
 {
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         private readonly IHost host;
 
