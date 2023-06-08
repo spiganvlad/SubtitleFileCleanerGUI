@@ -14,9 +14,10 @@ using SubtitleFileCleanerGUI.Application.Service.Input;
 using SubtitleFileCleanerGUI.Application.Service.IO;
 using SubtitleFileCleanerGUI.Application.Service.ModelCreation;
 using SubtitleFileCleanerGUI.Application.Service.Settings;
+using SubtitleFileCleanerGUI.Application.Service.Settings.Options;
 using SubtitleFileCleanerGUI.Application.Service.SubtitleConversion;
 using SubtitleFileCleanerGUI.Application.Service.Utility;
-using SubtitleFileCleanerGUI.Service.Settings;
+using SubtitleFileCleanerGUI.UI.View;
 
 namespace SubtitleFileCleanerGUI.UI.Registers
 {
@@ -67,6 +68,9 @@ namespace SubtitleFileCleanerGUI.UI.Registers
 
         public static IServiceCollection AddSettings(this IServiceCollection services)
         {
+            services.Configure<SettingsWindowCreatorOptions>(options =>
+                options.SettingWindowType = typeof(SettingsWindow));
+
             return services
                 .AddTransient<ISettingsWindowCreator, SettingsWindowCreator>()
                 .AddTransient<IDefaultFileManipulator, DefaultFilesManipulator>();

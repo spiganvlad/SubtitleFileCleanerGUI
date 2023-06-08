@@ -170,7 +170,7 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
             {
                 logger.LogError(ex, "An error occurred while trying to drop the file(s). Source: {source}. " +
                     "Original Source: {originalSource}", eventArgs.Source, eventArgs.OriginalSource);
-                MessageBox.Show("Unexpected error", "Unable to set the dropped file", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to set the dropped file", "Unexpected error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -210,7 +210,15 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
 
         public void OpenSettings()
         {
-            settingsWindowCreator.Create().Show();
+            try
+            {
+                settingsWindowCreator.Create().Show();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
+                MessageBox.Show("Unable to open settings window", "Unexpected error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
