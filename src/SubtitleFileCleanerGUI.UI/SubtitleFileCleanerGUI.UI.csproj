@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Images\AppIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\**" />
+    <Resource Include="Fonts\**" />
+    <ProjectReference Include="..\SubtitleFileCleanerGUI.Application.Abstractions\SubtitleFileCleanerGUI.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\SubtitleFileCleanerGUI.Application\SubtitleFileCleanerGUI.Application.csproj" />
+    <ProjectReference Include="..\SubtitleFileCleanerGUI.Domain\SubtitleFileCleanerGUI.Domain.csproj" />
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

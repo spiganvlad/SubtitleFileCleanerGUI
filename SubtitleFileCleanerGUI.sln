@@ -1,9 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33626.354
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleFileCleanerGUI", "SubtitleFileCleanerGUI\SubtitleFileCleanerGUI.csproj", "{9A9204CE-6BA4-4C96-B485-6AE7D640C104}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3D94CF65-191B-4C85-A8CB-1584AE7EB283}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleFileCleanerGUI.UI", "src\SubtitleFileCleanerGUI.UI\SubtitleFileCleanerGUI.UI.csproj", "{72BE77F9-A673-4B1C-8B43-30087B456617}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleFileCleanerGUI.Domain", "src\SubtitleFileCleanerGUI.Domain\SubtitleFileCleanerGUI.Domain.csproj", "{075936B0-A475-473F-83D5-333560EF0321}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SubtitleFileCleanerGUI.Application", "src\SubtitleFileCleanerGUI.Application\SubtitleFileCleanerGUI.Application.csproj", "{2345C3D1-DDA4-4431-B6C5-A170A6EFAB2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubtitleFileCleanerGUI.Application.Abstractions", "src\SubtitleFileCleanerGUI.Application.Abstractions\SubtitleFileCleanerGUI.Application.Abstractions.csproj", "{5325092F-3362-4A7E-9402-A7509133404D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,13 +19,31 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9A9204CE-6BA4-4C96-B485-6AE7D640C104}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A9204CE-6BA4-4C96-B485-6AE7D640C104}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A9204CE-6BA4-4C96-B485-6AE7D640C104}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A9204CE-6BA4-4C96-B485-6AE7D640C104}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72BE77F9-A673-4B1C-8B43-30087B456617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72BE77F9-A673-4B1C-8B43-30087B456617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72BE77F9-A673-4B1C-8B43-30087B456617}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72BE77F9-A673-4B1C-8B43-30087B456617}.Release|Any CPU.Build.0 = Release|Any CPU
+		{075936B0-A475-473F-83D5-333560EF0321}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{075936B0-A475-473F-83D5-333560EF0321}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{075936B0-A475-473F-83D5-333560EF0321}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{075936B0-A475-473F-83D5-333560EF0321}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2345C3D1-DDA4-4431-B6C5-A170A6EFAB2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2345C3D1-DDA4-4431-B6C5-A170A6EFAB2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2345C3D1-DDA4-4431-B6C5-A170A6EFAB2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2345C3D1-DDA4-4431-B6C5-A170A6EFAB2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5325092F-3362-4A7E-9402-A7509133404D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5325092F-3362-4A7E-9402-A7509133404D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5325092F-3362-4A7E-9402-A7509133404D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5325092F-3362-4A7E-9402-A7509133404D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{72BE77F9-A673-4B1C-8B43-30087B456617} = {3D94CF65-191B-4C85-A8CB-1584AE7EB283}
+		{075936B0-A475-473F-83D5-333560EF0321} = {3D94CF65-191B-4C85-A8CB-1584AE7EB283}
+		{2345C3D1-DDA4-4431-B6C5-A170A6EFAB2D} = {3D94CF65-191B-4C85-A8CB-1584AE7EB283}
+		{5325092F-3362-4A7E-9402-A7509133404D} = {3D94CF65-191B-4C85-A8CB-1584AE7EB283}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BFD64AC1-F1E1-4E0B-ADDF-2C746C4AD5DB}
