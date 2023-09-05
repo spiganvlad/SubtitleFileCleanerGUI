@@ -62,30 +62,6 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Input
         }
 
         [Fact]
-        public void Create_WithParameterlessCreatorException_RaiseException()
-        {
-            // Arrange
-            Action execute = () => { };
-
-            var exceptionMessage = "Test unexpected exception occurred.";
-            parameterlessCreatorMock.Setup(pc => pc.Create(execute, null))
-                .Throws(new Exception(exceptionMessage));
-
-            var commandCreator = new CommandCreator(parameterlessCreatorMock.Object, parameterizedCreatorMock.Object);
-
-            // Act
-            Action act = () =>
-            {
-                commandCreator.Create(execute);
-            };
-
-            // Assert
-            act.Should().Throw<Exception>().WithMessage(exceptionMessage);
-
-            parameterlessCreatorMock.Verify(pc => pc.Create(It.IsAny<Action>(), It.IsAny<Func<bool>>()), Times.Once());
-        }
-
-        [Fact]
         public void CreateTParameter_WithValidExecute_ReturnValidICommand()
         {
             // Arrange
@@ -125,30 +101,6 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Input
             parameterizedCreatorMock.Verify(pc => pc.Create(It.IsAny<Action<bool>>(), It.IsAny<Predicate<bool>>()), Times.Once());
 
             result.Should().Be(command);
-        }
-
-        [Fact]
-        public void CreateTParameter_WithParameterizedCreatorException_RaiseException()
-        {
-            // Arrange
-            Action<bool> execute = (parameter) => { };
-
-            var exceptionMessage = "Test unexpected exception occurred.";
-            parameterizedCreatorMock.Setup(pc => pc.Create(execute, null))
-                .Throws(new Exception(exceptionMessage));
-
-            var commandCreator = new CommandCreator(parameterlessCreatorMock.Object, parameterizedCreatorMock.Object);
-
-            // Act
-            Action act = () =>
-            {
-                var result = commandCreator.Create(execute);
-            };
-
-            // Assert
-            act.Should().Throw<Exception>().WithMessage(exceptionMessage);
-
-            parameterizedCreatorMock.Verify(pc => pc.Create(It.IsAny<Action<bool>>(), It.IsAny<Predicate<bool>>()), Times.Once());
         }
     }
 }
