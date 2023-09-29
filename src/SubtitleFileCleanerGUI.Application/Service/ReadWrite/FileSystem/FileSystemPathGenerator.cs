@@ -1,11 +1,11 @@
 ﻿using System.IO;
-using SubtitleFileCleanerGUI.Application.Abstractions.Service.IO;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.ReadWrite;
 
-namespace SubtitleFileCleanerGUI.Application.Service.IO
+namespace SubtitleFileCleanerGUI.Application.Service.ReadWrite.FileSystem
 {
-    public class UniquePathCreator : IUniquePathCreator
+    public class FileSystemPathGenerator : IPathGenerator
     {
-        public string Create(string path)
+        public string CreateUniquePath(string path)
         {
             if (File.Exists(path))
             {

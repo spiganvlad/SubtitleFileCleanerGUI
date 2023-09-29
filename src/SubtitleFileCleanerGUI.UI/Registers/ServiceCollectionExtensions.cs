@@ -3,16 +3,17 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.Dialog;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.Input;
-using SubtitleFileCleanerGUI.Application.Abstractions.Service.IO;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.ModelCreation;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.ReadWrite;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.Settings;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.SubtitleConversion;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.Utility;
 using SubtitleFileCleanerGUI.Application.Service.Dialog;
 using SubtitleFileCleanerGUI.Application.Service.Extensions;
 using SubtitleFileCleanerGUI.Application.Service.Input;
-using SubtitleFileCleanerGUI.Application.Service.IO;
 using SubtitleFileCleanerGUI.Application.Service.ModelCreation;
+using SubtitleFileCleanerGUI.Application.Service.ReadWrite;
+using SubtitleFileCleanerGUI.Application.Service.ReadWrite.FileSystem;
 using SubtitleFileCleanerGUI.Application.Service.Settings;
 using SubtitleFileCleanerGUI.Application.Service.Settings.Options;
 using SubtitleFileCleanerGUI.Application.Service.SubtitleConversion;
@@ -44,11 +45,17 @@ namespace SubtitleFileCleanerGUI.UI.Registers
                 .AddTransient<ICommandCreator, CommandCreator>();
         }
 
-        public static IServiceCollection AddIO(this IServiceCollection services)
+        public static IServiceCollection AddReadWrite(this IServiceCollection services)
         {
             return services
-                .AddTransient<IFileManipulator, FileManipulator>()
-                .AddTransient<IUniquePathCreator, UniquePathCreator>();
+                .AddTransient<IAsyncReader, FileSystemAsyncReader>()
+                .AddTransient<IAsyncReaderFactory, ReaderFactory>()
+
+                .AddTransient<IAsyncWriter, FileSystemAsyncWriter>()
+                .AddTransient<IAsyncWriterFactory, WriterFactory>()
+
+                .AddTransient<IPathGenerator, FileSystemPathGenerator>()
+                .AddTransient<IPathGeneratorFactory, PathGeneratorFactory>();
         }
 
         public static IServiceCollection AddDialogs(this IServiceCollection services)

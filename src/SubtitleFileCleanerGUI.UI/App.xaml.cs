@@ -26,7 +26,7 @@ namespace SubtitleFileCleanerGUI.UI
         {
             services.AddSerilog();
             services.AddInputCommands();
-            services.AddIO();
+            services.AddReadWrite();
             services.AddDialogs();
             services.AddUtilities();
             services.AddSettings();

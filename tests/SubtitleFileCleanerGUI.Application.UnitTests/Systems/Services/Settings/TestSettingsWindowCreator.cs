@@ -60,7 +60,7 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Settings
             var settingsWindowCreator = new SettingsWindowCreator(settingsWindowOptionsMock.Object, hostMock.Object);
 
             // Act
-            Action act = () => { var result = settingsWindowCreator.Create(); };
+            Action act = () => settingsWindowCreator.Create();
 
             // Assert
             settingsWindowOptionsMock.VerifyGet(o => o.Value, Times.Once());
@@ -80,7 +80,7 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Settings
             var settingWindowCreator = new SettingsWindowCreator(settingsWindowOptionsMock.Object, hostMock.Object);
 
             // Act
-            Action act = () => { var result = settingWindowCreator.Create(); };
+            Action act = () => settingWindowCreator.Create();
 
             // Assert
             settingsWindowOptionsMock.VerifyGet(o => o.Value, Times.Once());
@@ -104,7 +104,7 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Settings
             var settingsWindowCreator = new SettingsWindowCreator(settingsWindowOptionsMock.Object, hostMock.Object);
 
             // Act
-            Action act = () => { var result = settingsWindowCreator.Create(); };
+            Action act = () => settingsWindowCreator.Create();
 
             // Assert
             settingsWindowOptionsMock.VerifyGet(o => o.Value, Times.Once());
