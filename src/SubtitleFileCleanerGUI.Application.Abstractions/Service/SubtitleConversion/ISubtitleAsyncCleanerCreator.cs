@@ -3,7 +3,7 @@ using SubtitleFileCleanerGUI.Domain.Enums;
 
 namespace SubtitleFileCleanerGUI.Application.Abstractions.Service.SubtitleConversion
 {
-    public interface ISubtitleCleanerCreator
+    public interface ISubtitleAsyncCleanerCreator
     {
         public ISubtitleCleanerAsync Create(SubtitleCleaners cleaner);
     }

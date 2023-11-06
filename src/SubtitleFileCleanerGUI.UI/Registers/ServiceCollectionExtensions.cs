@@ -94,8 +94,10 @@ namespace SubtitleFileCleanerGUI.UI.Registers
         {
             return services
                 .AddTransient<IAutoCleanerDefiner, AutoCleanerDefiner>()
-                .AddTransient<ISubtitleCleanerCreator, SubtitleCleanerCreator>()
+                .AddTransient<ISubtitleAsyncCleanerCreator, SubtitleAsyncCleanerCreator>()
+                .AddTransient<ITagCleaner, TagCleaner>()
                 .AddTransient<ITagCollectionCreator, TagCollectionCreator>()
+                .AddTransient<IToOneLineCleaner, ToOneLineCleaner>()
                 .AddTransient<ISubtitleFileConverter, SubtitleFileConverter>();
         }
     }
