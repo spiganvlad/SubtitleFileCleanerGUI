@@ -87,7 +87,8 @@ namespace SubtitleFileCleanerGUI.UI.Registers
         {
             return services
                 .AddTransient<IStatusInfoWatcher, StatusInfoWatcher>()
-                .AddTransient<ISubtitleStatusFileCreator, SubtitleStatusFileCreator>();
+                .AddTransient<IStatusInfoWatcherFactory, StatusInfoWatcherFactory>()
+                .AddTransient<ISubtitleStatusFileFactory, SubtitleStatusFileFactory>();
         }
 
         public static IServiceCollection AddSubtitleConversion(this IServiceCollection services)

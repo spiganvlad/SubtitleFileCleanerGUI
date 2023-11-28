@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Extensions.Logging;
+using SubtitleFileCleanerGUI.Application.Abstractions.Enums;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.Dialog;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.Input;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.ModelCreation;
@@ -23,7 +24,7 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
     {
         private readonly ILogger<MainVM> logger;
         private readonly ISubtitleFileConverter fileConverter;
-        private readonly ISubtitleStatusFileCreator fileCreator;
+        private readonly ISubtitleStatusFileFactory fileCreator;
         private readonly ISettingsWindowCreator settingsWindowCreator;
         private readonly IDialogOpener dialogOpener;
 
@@ -53,7 +54,7 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
         public ICommand OpenSettingsCommand => openSettingsCommand;
 
         public MainVM(ILogger<MainVM> logger, ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator,
-            ISubtitleStatusFileCreator fileCreator, ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator,
+            ISubtitleStatusFileFactory fileCreator, ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator,
             IDialogOpener dialogOpener)
         {
             this.logger = logger;
@@ -79,7 +80,10 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
 
         private void AddFile()
         {
-            Files.Add(fileCreator.Create());
+            var subtitleFile = fileCreator.CreateWithStatusWatcher(DefaultFileTypes.Custom);
+            subtitleFile.Status.StatusType = StatusTypes.WaitingProcess;
+
+            Files.Add(subtitleFile);
         }
         
         private void RemoveFile(SubtitleStatusFile file)
@@ -197,12 +201,13 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
                 DropFileAddNew(filePaths.Skip(1).ToArray());
         }
 
-        // Creates new files if they were dropped into the datagrid or more than one file was dropped in the text box/button
+        // Creates new files if they were dropped into the DataGrid or more than one file was dropped in the text box/button
         private void DropFileAddNew(string[] filePaths)
         {
             foreach (string filePath in filePaths)
             {
-                var file = fileCreator.Create();
+                var file = fileCreator.CreateWithStatusWatcher(DefaultFileTypes.Custom);
+                file.Status.StatusType = StatusTypes.WaitingProcess;
                 file.File.PathLocation = filePath;
                 Files.Add(file);
             }
