@@ -87,7 +87,7 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Subtitle
 
             byte[] resultBytes = null;
             asyncWriterMock.Setup(aw => aw.WriteAsync(uniquePath, cleanedBytes))
-                .Callback((string path, byte[] bytes) => resultBytes = bytes);
+                .Callback((string _, byte[] bytes) => resultBytes = bytes);
 
             var subtitleFileConverter = new SubtitleFileConverter(autoCleanerDefinerMock.Object, subtitleCleanerCreatorMock.Object, asyncReaderFactoryMock.Object,
                 tagCleanerMock.Object, tagCollectionCreatorMock.Object, toOneLineCleanerMock.Object , pathGeneratorFactoryMock.Object, asyncWriterFactoryMock.Object);
@@ -155,7 +155,7 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Subtitle
             
             byte[] resultBytes = null;
             asyncWriterMock.Setup(aw => aw.WriteAsync(uniquePath, cleanedBytes))
-                .Callback((string path, byte[] bytes) => resultBytes = bytes);
+                .Callback((string _, byte[] bytes) => resultBytes = bytes);
 
             var subtitleFileConverter = new SubtitleFileConverter(autoCleanerDefinerMock.Object, subtitleCleanerCreatorMock.Object, asyncReaderFactoryMock.Object,
                 tagCleanerMock.Object, tagCollectionCreatorMock.Object, toOneLineCleanerMock.Object, pathGeneratorFactoryMock.Object, asyncWriterFactoryMock.Object);
@@ -228,7 +228,7 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Subtitle
 
             byte[] resultBytes = null;
             asyncWriterMock.Setup(aw => aw.WriteAsync(uniquePath, optionCleanedBytes))
-                .Callback((string path, byte[] bytes) => resultBytes = bytes);
+                .Callback((string _, byte[] bytes) => resultBytes = bytes);
 
             var subtitleFileConverter = new SubtitleFileConverter(autoCleanerDefinerMock.Object, subtitleCleanerCreatorMock.Object, asyncReaderFactoryMock.Object,
                 tagCleanerMock.Object, tagCollectionCreatorMock.Object, toOneLineCleanerMock.Object, pathGeneratorFactoryMock.Object, asyncWriterFactoryMock.Object);
@@ -297,7 +297,7 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Subtitle
 
             byte[] resultBytes = null;
             asyncWriterMock.Setup(aw => aw.WriteAsync(uniquePath, optionCleanedBytes))
-                .Callback((string path, byte[] bytes) => resultBytes = bytes);
+                .Callback((string _, byte[] bytes) => resultBytes = bytes);
 
             var subtitleFileConverter = new SubtitleFileConverter(autoCleanerDefinerMock.Object, subtitleCleanerCreatorMock.Object, asyncReaderFactoryMock.Object,
                 tagCleanerMock.Object, tagCollectionCreatorMock.Object, toOneLineCleanerMock.Object, pathGeneratorFactoryMock.Object, asyncWriterFactoryMock.Object);
