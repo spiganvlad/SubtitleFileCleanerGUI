@@ -78,14 +78,20 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
             openSettingsCommand = commandCreator.Create(OpenSettings);
         }
 
+        private SubtitleStatusFile CreateSubtitleStatusFile()
+        {
+            var file = fileCreator.CreateWithStatusWatcher(DefaultFileTypes.Custom);
+            file.Status.StatusType = StatusTypes.WaitingProcess;
+
+            return file;
+        }
+
         private void AddFile()
         {
-            var subtitleFile = fileCreator.CreateWithStatusWatcher(DefaultFileTypes.Custom);
-            subtitleFile.Status.StatusType = StatusTypes.WaitingProcess;
-
-            Files.Add(subtitleFile);
+            var file = CreateSubtitleStatusFile();
+            Files.Add(file);
         }
-        
+
         private void RemoveFile(SubtitleStatusFile file)
         {
             Files.Remove(file);
@@ -101,18 +107,18 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
             try
             {
                 file.Status.StatusType = StatusTypes.ConvertingProcess;
-                logger.LogInformation("Start converting \"{fileName}\" file", Path.GetFileName(file.File.PathLocation));
+                logger.LogInformation("Start converting \"{fileName}\" file.", Path.GetFileName(file.File.PathLocation));
 
                 await fileConverter.ConvertAsync(file.File);
                 
                 file.Status.StatusType = StatusTypes.CompletedProcess;
-                logger.LogInformation("\"{fileName}\" file conversion completed successfully", Path.GetFileName(file.File.PathLocation));
+                logger.LogInformation("\"{fileName}\" file conversion completed successfully.", Path.GetFileName(file.File.PathLocation));
             }
             catch (Exception ex)
             {
                 file.Status.StatusType = StatusTypes.FailedProcess;
                 file.Status.TextInfo += "\n" + ex.Message;
-                logger.LogError(ex, "An error occurred while converting the \"{fileName}\" file", Path.GetFileName(file.File.PathLocation));
+                logger.LogError(ex, "An error occurred while converting the \"{fileName}\" file.", Path.GetFileName(file.File.PathLocation));
             }
         }
 
@@ -206,14 +212,13 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
         {
             foreach (string filePath in filePaths)
             {
-                var file = fileCreator.CreateWithStatusWatcher(DefaultFileTypes.Custom);
-                file.Status.StatusType = StatusTypes.WaitingProcess;
+                var file = CreateSubtitleStatusFile();
                 file.File.PathLocation = filePath;
                 Files.Add(file);
             }
         }
 
-        public void OpenSettings()
+        private void OpenSettings()
         {
             try
             {
