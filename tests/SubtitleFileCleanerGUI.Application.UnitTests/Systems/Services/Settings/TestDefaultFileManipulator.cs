@@ -50,7 +50,7 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Settings
                 .SetupSection(toOneLineSectionPath, toOneLine.ToString(), out Mock<IConfigurationSection> toOneLineSection)
                 .Build();
 
-            var defaultFileManipulator = new DefaultFilesManipulator(configurationMock.Object, attributeManipulatorMock.Object);
+            var defaultFileManipulator = new DefaultFileManipulator(configurationMock.Object, attributeManipulatorMock.Object);
 
             // Act
             var result = defaultFileManipulator.GetDefaultFile(defaultFileType);
@@ -110,7 +110,7 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Settings
             configurationMock.SetupSet(c => c[deleteTagsSectionPath] = deleteTags.ToString());
             configurationMock.SetupSet(c => c[toOneLineSectionPath] = toOneLine.ToString());
 
-            var defaultFileManipulator = new DefaultFilesManipulator(configurationMock.Object, attributeManipulatorMock.Object);
+            var defaultFileManipulator = new DefaultFileManipulator(configurationMock.Object, attributeManipulatorMock.Object);
 
             // Act
             defaultFileManipulator.SetDefaultFile(subtitleFile, defaultFileType);

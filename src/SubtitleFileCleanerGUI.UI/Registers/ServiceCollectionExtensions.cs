@@ -80,7 +80,7 @@ namespace SubtitleFileCleanerGUI.UI.Registers
 
             return services
                 .AddTransient<ISettingsWindowCreator, SettingsWindowCreator>()
-                .AddTransient<IDefaultFileManipulator, DefaultFilesManipulator>();
+                .AddTransient<IDefaultFileManipulator, DefaultFileManipulator>();
         }
 
         public static IServiceCollection AddModelCreation(this IServiceCollection services)

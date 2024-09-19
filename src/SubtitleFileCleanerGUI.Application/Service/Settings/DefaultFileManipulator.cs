@@ -9,12 +9,12 @@ using SubtitleFileCleanerGUI.Domain.Model;
 
 namespace SubtitleFileCleanerGUI.Application.Service.Settings
 {
-    public class DefaultFilesManipulator : IDefaultFileManipulator
+    public class DefaultFileManipulator : IDefaultFileManipulator
     {
         private readonly IConfiguration configuration;
         private readonly IAttributeManipulator attributeManipulator;
 
-        public DefaultFilesManipulator(IConfiguration configuration, IAttributeManipulator attributeManipulator)
+        public DefaultFileManipulator(IConfiguration configuration, IAttributeManipulator attributeManipulator)
         {
             this.configuration = configuration;
             this.attributeManipulator = attributeManipulator;
