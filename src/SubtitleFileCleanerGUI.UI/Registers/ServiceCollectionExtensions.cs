@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.Dialog;
@@ -9,7 +10,6 @@ using SubtitleFileCleanerGUI.Application.Abstractions.Service.Settings;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.SubtitleConversion;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.Utility;
 using SubtitleFileCleanerGUI.Application.Service.Dialog;
-using SubtitleFileCleanerGUI.Application.Service.Extensions;
 using SubtitleFileCleanerGUI.Application.Service.Input;
 using SubtitleFileCleanerGUI.Application.Service.ModelCreation;
 using SubtitleFileCleanerGUI.Application.Service.ReadWrite;
@@ -24,10 +24,14 @@ namespace SubtitleFileCleanerGUI.UI.Registers
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddSerilog(this IServiceCollection services)
+        public static IServiceCollection AddSerilog(this IServiceCollection services, string jsonConfigPath)
         {
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile(jsonConfigPath)
+                .Build();
+
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.AppSettingsJson()
+                .ReadFrom.Configuration(configuration)
                 .CreateLogger();
 
             return services.AddLogging(builder =>

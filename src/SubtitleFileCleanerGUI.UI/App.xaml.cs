@@ -12,6 +12,7 @@ namespace SubtitleFileCleanerGUI.UI
 {
     public partial class App : System.Windows.Application
     {
+        private readonly string jsonConfigPath = "appsettings.json";
         private readonly IHost host;
 
         public App()
@@ -24,7 +25,7 @@ namespace SubtitleFileCleanerGUI.UI
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSerilog();
+            services.AddSerilog(jsonConfigPath);
             services.AddInputCommands();
             services.AddReadWrite();
             services.AddDialogs();
@@ -40,7 +41,7 @@ namespace SubtitleFileCleanerGUI.UI
 
         private void ConfigureAppConfiguration(IConfigurationBuilder builder)
         {
-            builder.AddJsonFile("appsettings.json");
+            builder.AddJsonFile(jsonConfigPath);
         }
 
         private void OnStartup(object sender, StartupEventArgs e)
