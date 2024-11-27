@@ -59,15 +59,15 @@ namespace SubtitleFileCleanerGUI.Application.UnitTests.Systems.Services.Settings
             attributeManipulatorMock.Verify(am => am.GetAttributes<DefaultFileTypes, SinglePathAttribute>(It.IsAny<DefaultFileTypes>()),
                 Times.Once());
 
-            pathSection.VerifyGet(s => s.Value, Times.Once);
-            cleanerSection.VerifyGet(s => s.Value, Times.Once);
-            deleteTagsSection.VerifyGet(s => s.Value, Times.Once);
-            toOneLineSection.VerifyGet(s => s.Value, Times.Once);
+            pathSection.VerifyGet(s => s.Value, Times.Once());
+            cleanerSection.VerifyGet(s => s.Value, Times.Once());
+            deleteTagsSection.VerifyGet(s => s.Value, Times.Once());
+            toOneLineSection.VerifyGet(s => s.Value, Times.Once());
 
-            configurationMock.Verify(c => c.GetSection(pathSectionPath), Times.Once);
-            configurationMock.Verify(c => c.GetSection(cleanerSectionPath), Times.Once);
-            configurationMock.Verify(c => c.GetSection(deleteTagsSectionPath), Times.Once);
-            configurationMock.Verify(c => c.GetSection(toOneLineSectionPath), Times.Once);
+            configurationMock.Verify(c => c.GetSection(pathSectionPath), Times.Once());
+            configurationMock.Verify(c => c.GetSection(cleanerSectionPath), Times.Once());
+            configurationMock.Verify(c => c.GetSection(deleteTagsSectionPath), Times.Once());
+            configurationMock.Verify(c => c.GetSection(toOneLineSectionPath), Times.Once());
 
             result.Should().NotBeNull();
             result.PathDestination.Should().NotBeNull().And.Be(path);
