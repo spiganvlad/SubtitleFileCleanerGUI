@@ -10,11 +10,7 @@ namespace SubtitleFileCleanerGUI.Application.Service.Dialog
             VistaFolderBrowserDialog dialog = new();
             var success = dialog.ShowDialog();
 
-            if (success.Value)
-                folderPath = dialog.SelectedPath;
-            else
-                folderPath = string.Empty;
-
+            folderPath = dialog.SelectedPath;
             return success;
         }
     }

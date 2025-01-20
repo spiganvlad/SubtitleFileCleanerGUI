@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using SubtitleBytesClearFormatting.Cleaners;
-using SubtitleFileCleanerGUI.Application.Abstractions.Service.IO;
+using SubtitleFileCleanerGUI.Application.Abstractions.Enums;
+using SubtitleFileCleanerGUI.Application.Abstractions.Service.ReadWrite;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.SubtitleConversion;
 using SubtitleFileCleanerGUI.Domain.Enums;
 using SubtitleFileCleanerGUI.Domain.Model;
@@ -11,19 +11,27 @@ namespace SubtitleFileCleanerGUI.Application.Service.SubtitleConversion
     public class SubtitleFileConverter : ISubtitleFileConverter
     {
         private readonly IAutoCleanerDefiner autoDefiner;
-        private readonly ISubtitleCleanerCreator cleanerCreator;
+        private readonly ISubtitleAsyncCleanerCreator cleanerCreator;
+        private readonly IAsyncReaderFactory readerFactory;
+        private readonly ITagCleaner tagCleaner;
         private readonly ITagCollectionCreator tagsCreator;
-        private readonly IUniquePathCreator uniquePathCreator;
-        private readonly IFileManipulator fileManipulator;
+        private readonly IToOneLineCleaner toOneLineCleaner;
+        private readonly IPathGeneratorFactory pathGeneratorFactory;
+        private readonly IAsyncWriterFactory writerFactory;
 
-        public SubtitleFileConverter(IAutoCleanerDefiner autoDefiner, ISubtitleCleanerCreator cleanerCreator,
-            ITagCollectionCreator tagsCreator, IUniquePathCreator uniquePathCreator, IFileManipulator fileManipulator)
+
+        public SubtitleFileConverter(IAutoCleanerDefiner autoDefiner, ISubtitleAsyncCleanerCreator cleanerCreator,
+            IAsyncReaderFactory readerFactory, ITagCleaner tagCleaner, ITagCollectionCreator tagsCreator,
+            IToOneLineCleaner toOneLineCleaner, IPathGeneratorFactory pathGeneratorFactory, IAsyncWriterFactory writerFactory)
         {
             this.autoDefiner = autoDefiner;
             this.cleanerCreator = cleanerCreator;
+            this.readerFactory = readerFactory;
+            this.tagCleaner = tagCleaner;
             this.tagsCreator = tagsCreator;
-            this.uniquePathCreator = uniquePathCreator;
-            this.fileManipulator = fileManipulator;
+            this.toOneLineCleaner = toOneLineCleaner;
+            this.pathGeneratorFactory = pathGeneratorFactory;
+            this.writerFactory = writerFactory;
         }
 
         public async Task ConvertAsync(SubtitleFile file)
@@ -33,17 +41,23 @@ namespace SubtitleFileCleanerGUI.Application.Service.SubtitleConversion
 
             var cleaner = cleanerCreator.Create(file.Cleaner);
 
-            var subtitleBytes = await fileManipulator.ReadFileAsync(file.PathLocation);
+            var subtitleBytes = await readerFactory.CreateAsyncReader(ReadWriteType.FileSystem)
+                .ReadAsync(file.PathLocation);
+
             var resultBytes = (await cleaner.DeleteFormattingAsync(subtitleBytes)).ToArray();
 
             if (file.DeleteTags)
-                resultBytes = await TxtCleaner.DeleteTagsAsync(resultBytes, tagsCreator.Create(file.Cleaner));
+                resultBytes = await tagCleaner.DeleteTagsAsync(resultBytes, tagsCreator.Create(file.Cleaner));
 
             if (file.ToOneLine)
-                resultBytes = await TxtCleaner.ToOneLineAsync(resultBytes);
+                resultBytes = await toOneLineCleaner.ToOneLineAsync(resultBytes);
 
             var destinationPath = Path.Combine(file.PathDestination, $"{Path.GetFileNameWithoutExtension(file.PathLocation)}.txt");
-            await fileManipulator.WriteFileAsync(uniquePathCreator.Create(destinationPath), resultBytes);
+            var uniquePath = pathGeneratorFactory.CreatePathGenerator(ReadWriteType.FileSystem)
+                .CreateUniquePath(destinationPath);
+
+            await writerFactory.CreateAsyncWriter(ReadWriteType.FileSystem)
+                .WriteAsync(uniquePath, resultBytes);
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Extensions.Logging;
+using SubtitleFileCleanerGUI.Application.Abstractions.Enums;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.Dialog;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.Input;
 using SubtitleFileCleanerGUI.Application.Abstractions.Service.ModelCreation;
@@ -23,7 +24,7 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
     {
         private readonly ILogger<MainVM> logger;
         private readonly ISubtitleFileConverter fileConverter;
-        private readonly ISubtitleStatusFileCreator fileCreator;
+        private readonly ISubtitleStatusFileFactory fileCreator;
         private readonly ISettingsWindowCreator settingsWindowCreator;
         private readonly IDialogOpener dialogOpener;
 
@@ -53,7 +54,7 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
         public ICommand OpenSettingsCommand => openSettingsCommand;
 
         public MainVM(ILogger<MainVM> logger, ISubtitleFileConverter fileConverter, IEnumManipulator enumManipulator,
-            ISubtitleStatusFileCreator fileCreator, ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator,
+            ISubtitleStatusFileFactory fileCreator, ISettingsWindowCreator settingsWindowCreator, ICommandCreator commandCreator,
             IDialogOpener dialogOpener)
         {
             this.logger = logger;
@@ -77,11 +78,20 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
             openSettingsCommand = commandCreator.Create(OpenSettings);
         }
 
+        private SubtitleStatusFile CreateSubtitleStatusFile()
+        {
+            var file = fileCreator.CreateWithStatusWatcher(DefaultFileTypes.Custom);
+            file.Status.StatusType = StatusTypes.WaitingProcess;
+
+            return file;
+        }
+
         private void AddFile()
         {
-            Files.Add(fileCreator.Create());
+            var file = CreateSubtitleStatusFile();
+            Files.Add(file);
         }
-        
+
         private void RemoveFile(SubtitleStatusFile file)
         {
             Files.Remove(file);
@@ -97,18 +107,18 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
             try
             {
                 file.Status.StatusType = StatusTypes.ConvertingProcess;
-                logger.LogInformation("Start converting \"{fileName}\" file", Path.GetFileName(file.File.PathLocation));
+                logger.LogInformation("Start converting \"{fileName}\" file.", Path.GetFileName(file.File.PathLocation));
 
                 await fileConverter.ConvertAsync(file.File);
                 
                 file.Status.StatusType = StatusTypes.CompletedProcess;
-                logger.LogInformation("\"{fileName}\" file conversion completed successfully", Path.GetFileName(file.File.PathLocation));
+                logger.LogInformation("\"{fileName}\" file conversion completed successfully.", Path.GetFileName(file.File.PathLocation));
             }
             catch (Exception ex)
             {
                 file.Status.StatusType = StatusTypes.FailedProcess;
                 file.Status.TextInfo += "\n" + ex.Message;
-                logger.LogError(ex, "An error occurred while converting the \"{fileName}\" file", Path.GetFileName(file.File.PathLocation));
+                logger.LogError(ex, "An error occurred while converting the \"{fileName}\" file.", Path.GetFileName(file.File.PathLocation));
             }
         }
 
@@ -197,18 +207,18 @@ namespace SubtitleFileCleanerGUI.UI.ViewModel
                 DropFileAddNew(filePaths.Skip(1).ToArray());
         }
 
-        // Creates new files if they were dropped into the datagrid or more than one file was dropped in the text box/button
+        // Creates new files if they were dropped into the DataGrid or more than one file was dropped in the text box/button
         private void DropFileAddNew(string[] filePaths)
         {
             foreach (string filePath in filePaths)
             {
-                var file = fileCreator.Create();
+                var file = CreateSubtitleStatusFile();
                 file.File.PathLocation = filePath;
                 Files.Add(file);
             }
         }
 
-        public void OpenSettings()
+        private void OpenSettings()
         {
             try
             {

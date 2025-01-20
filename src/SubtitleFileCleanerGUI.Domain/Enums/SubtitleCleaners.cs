@@ -8,23 +8,23 @@ namespace SubtitleFileCleanerGUI.Domain.Enums
     public enum SubtitleCleaners
     {
         Auto,
-        [SubtitleCleaner(typeof(SrtCleaner))]
+        [SubtitleCleanerAsyncType(typeof(SrtCleaner))]
         [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
         [SubtitleExtension(".srt")]
         Srt,
-        [SubtitleCleaner(typeof(AssCleaner))]
+        [SubtitleCleanerAsyncType(typeof(AssCleaner))]
         [SubtitleTags(nameof(TagsCollectionGeneretor.GetAssSpecificTags))]
         [SubtitleExtension(".ass")]
         Ass,
-        [SubtitleCleaner(typeof(VttCleaner))]
+        [SubtitleCleanerAsyncType(typeof(VttCleaner))]
         [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
         [SubtitleExtension(".vtt")]
         Vtt,
-        [SubtitleCleaner(typeof(SbvCleaner))]
+        [SubtitleCleanerAsyncType(typeof(SbvCleaner))]
         [SubtitleTags(nameof(TagsCollectionGeneretor.GetBasicTags))]
         [SubtitleExtension(".sbv")]
         Sbv,
-        [SubtitleCleaner(typeof(SubCleaner))]
+        [SubtitleCleanerAsyncType(typeof(SubCleaner))]
         [SubtitleTags(nameof(TagsCollectionGeneretor.GetSubSpecificTags))]
         [SubtitleExtension(".sub")]
         Sub

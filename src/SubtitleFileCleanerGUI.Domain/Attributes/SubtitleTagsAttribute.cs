@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using SubtitleBytesClearFormatting.TagsGenerate;
 
 namespace SubtitleFileCleanerGUI.Domain.Attributes
 {
@@ -15,10 +13,9 @@ namespace SubtitleFileCleanerGUI.Domain.Attributes
             this.methodName = methodName;
         }
 
-        public Dictionary<byte, List<TxtTag>> GetSubtitleTagsDictionary()
+        public string GetTagsMethodName()
         {
-            Type type = typeof(TagsCollectionGeneretor);
-            return (Dictionary<byte, List<TxtTag>>)type.GetMethod(methodName).Invoke(null, null);
+            return methodName;
         }
     }
 }

@@ -36,7 +36,7 @@ namespace SubtitleFileCleanerGUI.Application.Service.SubtitleConversion
                 }
             }
 
-            throw new InvalidOperationException($"Unable to define converter for {fileExtension} extension");
+            throw new InvalidOperationException($"Unable to define converter for {fileExtension} extension.");
         }
     }
 }
